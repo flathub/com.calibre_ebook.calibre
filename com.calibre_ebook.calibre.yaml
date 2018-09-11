@@ -17,6 +17,7 @@ modules:
       - mkdir -p /app/bin
       - tar -x -f calibre*.txz -C /app/bin
       - rm -f calibre*.txz
+      - install -Dm644 /app/bin/resources/images/lt.png /app/share/icons/hicolor/256x256/apps/com.calibre_ebook.calibre.png
       - install -Dm644 /app/bin/resources/images/lt.png /app/share/icons/hicolor/256x256/apps/com.calibre_ebook.calibre.gui.png
       - install -Dm644 /app/bin/resources/images/tweak.png /app/share/icons/hicolor/256x256/apps/com.calibre_ebook.calibre.ebook_edit.png
       - install -Dm644 /app/bin/resources/images/viewer.png /app/share/icons/hicolor/256x256/apps/com.calibre_ebook.calibre.ebook_viewer.png
