@@ -5,6 +5,7 @@ sdk: org.freedesktop.Sdk
 command: calibre
 separate-locales: false
 finish-args:
+  - --device=all
   - --filesystem=home
   - --share=ipc
   - --share=network
