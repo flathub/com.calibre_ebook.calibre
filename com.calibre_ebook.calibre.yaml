@@ -45,10 +45,10 @@ modules:
       - type: file
         path: com.calibre_ebook.calibre.appdata.xml
       - type: file
+        path: com.calibre_ebook.calibre.desktop
+      - type: file
         path: com.calibre_ebook.calibre.ebook_edit.desktop
       - type: file
         path: com.calibre_ebook.calibre.ebook_viewer.desktop
-      - type: file
-        path: com.calibre_ebook.calibre.gui.desktop
       - type: file
         path: com.calibre_ebook.calibre.lrfviewer.desktop
