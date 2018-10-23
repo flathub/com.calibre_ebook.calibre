@@ -3,11 +3,11 @@
   <id>com.calibre_ebook.calibre.desktop</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0</project_license>
-  <name>calibre</name>
-  <summary>calibre e-book management</summary>
+  <name>Calibre</name>
+  <summary>E-book manager</summary>
   <description>
     <p>
-      calibre is an e-book manager. It can view, convert, edit and catalog
+      Calibre is an e-book manager. It can view, convert, edit and catalog
       e-books in all of the major e-book formats. It can also talk to e-book
       reader devices. It can go out to the internet and fetch metadata for
       your books. It can download newspapers and convert them into e-books
