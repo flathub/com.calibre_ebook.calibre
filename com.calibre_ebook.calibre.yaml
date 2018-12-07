@@ -30,18 +30,18 @@ modules:
       - install -Dm644 -t /app/share/applications com.calibre_ebook.calibre.lrfviewer.desktop
     sources:
       - type: archive
-        url: https://download.calibre-ebook.com/3.34.0/calibre-3.34.0.tar.xz
-        sha256: bff0e0fa616a5385c5fcf5f3fe4f200866ffd249a6281f0def027315278d1b1a
+        url: https://download.calibre-ebook.com/3.35.0/calibre-3.35.0.tar.xz
+        sha256: 3f1cb12804de37ea0bbe4119b378ac60fac5e1f0b113d28cca0c3af2252fa1bd
       - type: file
         only-arches:
           - x86_64
-        url: https://download.calibre-ebook.com/3.34.0/calibre-3.34.0-x86_64.txz
-        sha256: dad718b85a60d7edf4416d79b78d1fa216df165437bbad093af3a49cf068b2be
+        url: https://download.calibre-ebook.com/3.35.0/calibre-3.35.0-x86_64.txz
+        sha256: f0553d85871d9d5fd643aa8624f3a4632a3b59d62de69ccabf2823feab7a189b
       - type: file
         only-arches:
           - i386
-        url: https://download.calibre-ebook.com/3.34.0/calibre-3.34.0-i686.txz
-        sha256: 87884aba31bbadf74812dc8aa729f116bdc662e95e198f21d1d59a6c1891005c
+        url: https://download.calibre-ebook.com/3.35.0/calibre-3.35.0-i686.txz
+        sha256: 033d478713a19d5092827e75f4388c38ed4486fde8c41568b9d09a7464b8b833
       - type: file
         path: com.calibre_ebook.calibre.appdata.xml
       - type: file
