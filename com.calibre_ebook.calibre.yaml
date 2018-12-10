@@ -6,7 +6,7 @@ command: calibre
 separate-locales: false
 finish-args:
   - --device=all
-  - --filesystem=home
+  - --filesystem=host
   - --share=ipc
   - --share=network
   - --socket=x11
