@@ -31,18 +31,18 @@ modules:
       - install -Dm644 -t /app/share/applications com.calibre_ebook.calibre.lrfviewer.desktop
     sources:
       - type: archive
-        url: https://download.calibre-ebook.com/3.36.0/calibre-3.36.0.tar.xz
-        sha512: f7ddeb54dac7b52951dfdc4c14c4a18af436eed7e5d80326528d4101f8bf34a5de173049f04cda286f6172ff4aa8f0200a7e8d55aa720c36742327aebe5a9ab2
+        url: https://download.calibre-ebook.com/3.37.0/calibre-3.37.0.tar.xz
+        sha512: 9fba7a4085cc4a7b4be5a9f9ec00e3aa8047825efd918eb7b58361da49cd30ca440289674a3c4be5f28e511925d0ea6c77d283fb451367ec72ed8b0b0d274770
       - type: file
         only-arches:
           - x86_64
-        url: https://download.calibre-ebook.com/3.36.0/calibre-3.36.0-x86_64.txz
-        sha512: 2e6aca05f3304786140b6dbf6f00ced6032e232a1d368f2ed4d3d2d7ab2fca2b54e6f7515937bd1c85f7ab2f8f3713c24408e0b30639d3d552c640137bfcd972
+        url: https://download.calibre-ebook.com/3.37.0/calibre-3.37.0-x86_64.txz
+        sha512: b613dbfa1709a637ddc0994794cdc4b67ab8a0f375ebce507662823a97c5d78c36f2c3cea98e168d8e25b9ea20215be4b07cd56ecf097374f76acd21e68f06ed
       - type: file
         only-arches:
           - i386
-        url: https://download.calibre-ebook.com/3.36.0/calibre-3.36.0-i686.txz
-        sha512: fdb9bcebe02cfc0782bf4d338ed1914135759d1e689616e5622596b3b940a983d0667242175f93fb67ead22683ac8575fb2cc362920c25dc4b88e029f7803eb6
+        url: https://download.calibre-ebook.com/3.37.0/calibre-3.37.0-i686.txz
+        sha512: a4f9e559a47ffeb38afbb561536dd31e708d6f56f0a414df2a28e217c38fb62cd585d7828a19bbc77efcba78e96eb80c021d21e5b14693bae8bb3d53bf6d88a8
       - type: file
         path: com.calibre_ebook.calibre.appdata.xml
       - type: file
