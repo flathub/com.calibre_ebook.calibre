@@ -30,9 +30,6 @@ modules:
       - install -Dm644 -t /app/share/applications com.calibre_ebook.calibre.ebook_viewer.desktop
       - install -Dm644 -t /app/share/applications com.calibre_ebook.calibre.lrfviewer.desktop
     sources:
-      - type: archive
-        url: https://download.calibre-ebook.com/3.37.0/calibre-3.37.0.tar.xz
-        sha512: 9fba7a4085cc4a7b4be5a9f9ec00e3aa8047825efd918eb7b58361da49cd30ca440289674a3c4be5f28e511925d0ea6c77d283fb451367ec72ed8b0b0d274770
       - type: file
         only-arches:
           - x86_64
