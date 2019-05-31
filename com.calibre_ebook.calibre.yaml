@@ -33,13 +33,13 @@ modules:
       - type: file
         only-arches:
           - x86_64
-        url: https://download.calibre-ebook.com/3.43.0/calibre-3.43.0-x86_64.txz
-        sha512: 480b118b5d6a3739864c5377c7c988fc107d9b82394c76203447911988d95be3df30c63a6751f5dcfa8de447be80ed4b9970108671a1298fb2c5c6a9993cfa9f
+        url: https://download.calibre-ebook.com/3.44.0/calibre-3.44.0-x86_64.txz
+        sha512: 959318cd446ae21d34371f720a1775f913f8dafcf8ad13277d59740efe15f342143299b003d57f007af06cbf891ce14345079e4714369c05d0e3475b04c1c4b8
       - type: file
         only-arches:
           - i386
-        url: https://download.calibre-ebook.com/3.43.0/calibre-3.43.0-i686.txz
-        sha512: 80d0d99cc8882ce178b42e00f0b35876d0009f21c80b6971d3c497ac0ee823e9808667a8dff43733f3007adabfa9e64a061f57de690695fc3f7b179c58f0afd5
+        url: https://download.calibre-ebook.com/3.44.0/calibre-3.44.0-i686.txz
+        sha512: 2bc3e03e5783bc3878f8bfff90186b6228d81db2335a85fb87b7f57306a28ca9e441b292c3baf631ae12618c2ec4ad0d34637f7d2ab79519ee628ef81121cb65
       - type: file
         path: com.calibre_ebook.calibre.appdata.xml
       - type: file
