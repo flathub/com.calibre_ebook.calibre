@@ -26,6 +26,7 @@
   <url type="homepage">https://calibre-ebook.com/</url>
   <developer_name>Kovid Goyal</developer_name>
   <releases>
+    <release version="4.0" date="2019-10-04"/>
     <release version="3.48" date="2019-09-13"/>
     <release version="3.47.1" date="2019-09-02"/>
     <release version="3.47" date="2019-08-30"/>
