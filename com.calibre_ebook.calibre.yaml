@@ -33,8 +33,8 @@ modules:
       - type: file
         only-arches:
           - x86_64
-        url: https://download.calibre-ebook.com/4.12.0/calibre-4.12.0-x86_64.txz
-        sha512: 02695240d5c7b913ddcc318a65cae382db198884fb9c68deab00fec7b75a3e8d0cec899251717e9f796d3b10a86bad95aee2d2e4074449ecc0d6b1d1c3549ef6
+        url: https://download.calibre-ebook.com/4.13.0/calibre-4.13.0-x86_64.txz
+        sha512: 16bdb11634fbc486314be88c39a0414d3a4a178e912b74c52221792f6f16e64999b398de8e5f378e9a0283e9c69ee2c35ae84d94fe3a1add233f2234959ff53a
       - type: file
         path: com.calibre_ebook.calibre.appdata.xml
       - type: file
