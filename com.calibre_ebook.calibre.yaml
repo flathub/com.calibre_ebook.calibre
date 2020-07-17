@@ -38,8 +38,10 @@ modules:
         x-checker-data:
           type: html
           url: https://calibre-ebook.com/download_linux
-          version-pattern: 'The latest release of calibre is ((?:\d+\.)?(?:\d+\.)?\d+)'
-          url-template: 'https://download.calibre-ebook.com/$version/calibre-$version-x86_64.txz'
+          version-pattern: The latest release of calibre is ((?:\d+\.)?(?:\d+\.)?\d+)
+          url-template: https://download.calibre-ebook.com/$version/calibre-$version-x86_64.txz
+        sha256: 882ffbb56467a5adba189a06091c25b233b465cd74ec4b7b71cf26af7b9770cd
+        size: 102206312
       - type: file
         path: com.calibre_ebook.calibre.appdata.xml
       - type: file
