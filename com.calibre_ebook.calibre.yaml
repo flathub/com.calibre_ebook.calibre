@@ -33,14 +33,14 @@ modules:
       - type: file
         only-arches:
           - x86_64
-        url: https://download.calibre-ebook.com/4.22.0/calibre-4.22.0-x86_64.txz
+        url: https://download.calibre-ebook.com/4.23.0/calibre-4.23.0-x86_64.txz
         x-checker-data:
           type: html
           url: https://calibre-ebook.com/download_linux
           version-pattern: The latest release of calibre is ((?:\d+\.)?(?:\d+\.)?\d+)
           url-template: https://download.calibre-ebook.com/$version/calibre-$version-x86_64.txz
-        sha256: 2c0cc1a0d5e9d1396e4dac5c105d60cdc6ef01f8336410e527b8d3e7da6e530e
-        size: 102199076
+        sha256: 904a9fb8f6312042de0d38c92dbfcdde9dbd725081585d73121f5cb168349f92
+        size: 102148184
       - type: file
         path: com.calibre_ebook.calibre.appdata.xml
       - type: file
