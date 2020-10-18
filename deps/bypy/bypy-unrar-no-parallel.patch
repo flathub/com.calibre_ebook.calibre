@@ -1,0 +1,12 @@
+diff --git a/bypy/pkgs/unrar.py b/bypy/pkgs/unrar.py
+index 6eb9ef9..7f2994e 100644
+--- a/bypy/pkgs/unrar.py
++++ b/bypy/pkgs/unrar.py
+@@ -22,6 +22,6 @@ def main(args):
+     else:
+         if ismacos:
+             replace_in_file('makefile', 'libunrar.so', 'libunrar.dylib')
+-        run('make -j4 lib CXXFLAGS=-fPIC')
++        run('make lib CXXFLAGS=-fPIC')
+         install_binaries('libunrar.' + ('dylib' if ismacos else 'so'), 'lib')
+     copy_headers('*.hpp', destdir='include/unrar')

@@ -1,0 +1,1041 @@
+{
+	"modules": [
+		{
+			"build-commands": [
+				"python3 setup.py install --prefix=\"${FLATPAK_DEST}\""
+			],
+			"buildsystem": "simple",
+			"name": "setuptools-scm",
+			"sources": [
+				{
+					"sha256": "a8994582e716ec690f33fec70cca0f85bd23ec974e3f783233e4879090a7faa8",
+					"type": "archive",
+					"url": "https://files.pythonhosted.org/packages/cd/66/fa77e809b7cb1c2e14b48c7fc8a8cd657a27f4f9abb848df0c967b6e4e11/setuptools_scm-4.1.2.tar.gz"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"unrar\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "unrar",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "unrarsrc-5.9.4.tar.gz",
+					"mirror-urls": [],
+					"sha256": "3d010d14223e0c7a385ed740e8f046edcbe885e5c22c5ad5733d009596865300",
+					"type": "file",
+					"url": "https://www.rarlab.com/rar/unrarsrc-5.9.4.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"jxrlib\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "jxrlib",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "jxrlib-0.2.4.tar.gz",
+					"mirror-urls": [],
+					"sha256": "324af02e341bcb9e3b31a6d6892f47231f95f9f87ab4fe7645be619dcaf965a7",
+					"type": "file",
+					"url": "https://github.com/glencoesoftware/jxrlib/archive/v0.2.4.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"iconv\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "iconv",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "libiconv-1.16.tar.gz",
+					"mirror-urls": [],
+					"sha256": "e6a1b1b589654277ee790cce3734f07876ac4ccfaecbee8afa0b649cf529cc04",
+					"type": "file",
+					"url": "https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.16.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"chmlib\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "chmlib",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "chmlib-0.40.tar.bz2",
+					"mirror-urls": [],
+					"sha1": "5231d7531e8808420d7f89fd1e4fdbac1ed7a167",
+					"type": "file",
+					"url": "http://www.jedrea.com/chmlib/chmlib-0.40.tar.bz2"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"optipng\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "optipng",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "optipng-0.7.7.tar.gz",
+					"mirror-urls": [],
+					"sha256": "4f32f233cef870b3f95d3ad6428bfe4224ef34908f1b42b0badf858216654452",
+					"type": "file",
+					"url": "https://downloads.sourceforge.net/sourceforge/optipng/optipng-0.7.7.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"mozjpeg\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "mozjpeg",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "mozjpeg-3.3.1.tar.gz",
+					"mirror-urls": [],
+					"sha256": "aebbea60ea038a84a2d1ed3de38fdbca34027e2e54ee2b7d08a97578be72599d",
+					"type": "file",
+					"url": "https://github.com/mozilla/mozjpeg/archive/v3.3.1.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"libusb\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "libusb",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "libusb-1.0.23.tar.bz2",
+					"mirror-urls": [],
+					"sha256": "db11c06e958a82dac52cf3c65cb4dd2c3f339c8a988665110e0d24d19312ad8d",
+					"type": "file",
+					"url": "https://github.com/libusb/libusb/releases/download/v1.0.23/libusb-1.0.23.tar.bz2"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"libmtp\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "libmtp",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "libmtp-1.1.17.tar.gz",
+					"mirror-urls": [],
+					"sha256": "f8a34cf52d9f9b9cb8c7f26b12da347d4af7eb904c13189602e4c6b62d1a79dc",
+					"type": "file",
+					"url": "https://downloads.sourceforge.net/libmtp/libmtp-1.1.17.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"poppler\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "poppler",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "poppler-20.08.0.tar.xz",
+					"mirror-urls": [],
+					"sha256": "ae65fef04bbf63259a6352e7b620719115d4fb97f5079b0b8b00a8eb0c86eca5",
+					"type": "file",
+					"url": "https://poppler.freedesktop.org/poppler-20.08.0.tar.xz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"podofo\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "podofo",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "podofo-0.9.6.tar.gz",
+					"md5": "46336fc4c4ce4be814bb5fbb4d918334",
+					"mirror-urls": [],
+					"type": "file",
+					"url": "https://downloads.sourceforge.net/podofo/podofo-0.9.6.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"dbusglib\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "dbusglib",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "dbus-glib-0.110.tar.gz",
+					"mirror-urls": [],
+					"sha256": "7ce4760cf66c69148f6bd6c92feaabb8812dee30846b24cd0f7395c436d7e825",
+					"type": "file",
+					"url": "https://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-0.110.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"unrardll\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "unrardll",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "unrardll-0.1.3.tar.gz",
+					"mirror-urls": [],
+					"sha256": "5f214ab1ec24208c6ee353f2d836e536968d5379b7140129f04aa3a52bc56a5e",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/78/e1/f5941702c698826782974ba889570a405916dbeb068ab4ee88fc22a67db6/unrardll-0.1.3.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"lxml\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "lxml",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "lxml-4.5.2.tar.gz",
+					"mirror-urls": [],
+					"sha256": "cdc13a1682b2a6241080745b1953719e7fe0850b40a5c71ca574f090a1391df6",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/2c/4d/3ec1ea8512a7fbf57f02dee3035e2cce2d63d0e9c0ab8e4e376e01452597/lxml-4.5.2.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"pychm\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "pychm",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "pychm-0.8.6.tar.gz",
+					"mirror-urls": [],
+					"sha256": "26606fec1e30cf7506c7afa943460c31e8dac87f35b7f178f437574d654cf672",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/89/3d/2272705cfac544288fdcda172e25f4399c57371780943ad2d1b4acb67092/pychm-0.8.6.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"html5-parser\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "html5-parser",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "html5-parser-0.4.9.tar.gz",
+					"mirror-urls": [],
+					"sha256": "25fe8f6848cbc15187f6748c0695df32bcf1b37df6420b6a01b4ebe1ec1ed48f",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/a6/78/6a80c13be6c02fd2fb615b473a6ceff5b28bafca184f428ab197f677fd7a/html5-parser-0.4.9.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"css-parser\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "css-parser",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "css-parser-1.0.4.tar.gz",
+					"mirror-urls": [],
+					"sha256": "c7ab355512ae51334ba6791a7e4d553f87bef17ba2026f1cc9bf3b17a7779d44",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/38/97/94c9cdb2410d4f89749fa947338970203ef26f2bdb7ac089ab96a87763d2/css-parser-1.0.4.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"dateutil\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "dateutil",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "python-dateutil-2.8.1.tar.gz",
+					"mirror-urls": [],
+					"sha256": "73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/be/ed/5bbc91f03fa4c839c4c7360375da77f9659af5f7086b7a7bdda65771c8e0/python-dateutil-2.8.1.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"dbuspython\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "dbuspython",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "dbus-python-1.2.16.tar.gz",
+					"mirror-urls": [],
+					"sha256": "11238f1d86c995d8aed2e22f04a1e3779f0d70e587caffeab4857f3c662ed5a4",
+					"type": "file",
+					"url": "https://dbus.freedesktop.org/releases/dbus-python/dbus-python-1.2.16.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"dnspython\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "dnspython",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "dnspython-2.0.0.zip",
+					"mirror-urls": [],
+					"sha256": "044af09374469c3a39eeea1a146e8cac27daec951f1f1f157b1962fc7cb9d1b7",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/67/d0/639a9b5273103a18c5c68a7a9fc02b01cffa3403e72d553acec444f85d5b/dnspython-2.0.0.zip"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"mechanize\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "mechanize",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "mechanize-0.4.5.tar.gz",
+					"mirror-urls": [],
+					"sha256": "6355c11141f6d4b54a17fc2106944806b5db2711e60b120d15d83db438c333fd",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/77/1b/7e4b644108e4e99b136e52c6aae34873fcd267e3d2489f3bd2cff8655a59/mechanize-0.4.5.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"feedparser\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "feedparser",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "feedparser-5.2.1.tar.bz2",
+					"mirror-urls": [],
+					"sha256": "ce875495c90ebd74b179855449040003a1beb40cd13d5f037a0654251e260b02",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/91/d8/7d37fec71ff7c9dbcdd80d2b48bcdd86d6af502156fc93846fb0102cb2c4/feedparser-5.2.1.tar.bz2"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"html2text\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "html2text",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "html2text-2020.1.16.tar.gz",
+					"mirror-urls": [],
+					"sha256": "e296318e16b059ddb97f7a8a1d6a5c1d7af4544049a01e261731d2d5cc277bbb",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/6c/f9/033a17d8ea8181aee41f20c74c3b20f1ccbefbbc3f7cd24e3692de99fb25/html2text-2020.1.16.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"soupsieve\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "soupsieve",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "soupsieve-2.0.1.tar.gz",
+					"mirror-urls": [],
+					"sha256": "a59dc181727e95d25f781f0eb4fd1825ff45590ec8ff49eadfd7f1a537cc0232",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/3e/db/5ba900920642414333bdc3cb397075381d63eafc7e75c2373bbc560a9fa1/soupsieve-2.0.1.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"beautifulsoup4\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "beautifulsoup4",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "beautifulsoup4-4.9.1.tar.gz",
+					"mirror-urls": [],
+					"sha256": "73cc4d115b96f79c7d77c1c7f7a0a8d4c57860d1041df407dd1aae7f07a77fd7",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/c6/62/8a2bef01214eeaa5a4489eca7104e152968729512ee33cb5fbbc37a896b7/beautifulsoup4-4.9.1.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"regex\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "regex",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "regex-2020.07.14.tar.gz",
+					"mirror-urls": [],
+					"sha256": "3a3af27a8d23143c49a3420efe5b3f8cf1a48c6fc8bc6856b03f638abc1833bb",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/09/c3/ddaa87500f31ed86290e3d014c0302a51fde28d7139eda0b5f33733726db/regex-2020.7.14.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"chardet\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "chardet",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "chardet-3.0.4.tar.gz",
+					"mirror-urls": [],
+					"sha256": "84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/fc/bb/a5768c230f9ddb03acc9ef3f0d4a3cf93462473795d18e9535498c8f929d/chardet-3.0.4.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"msgpack\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "msgpack",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "msgpack-1.0.0.tar.gz",
+					"mirror-urls": [],
+					"sha256": "9534d5cc480d4aff720233411a1f765be90885750b07df772380b34c10ecb5c0",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/e4/4f/057549afbd12fdd5d9aae9df19a6773a3d91988afe7be45b277e8cee2f4d/msgpack-1.0.0.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"pycryptodome\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "pycryptodome",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "pycryptodome-3.9.8.tar.gz",
+					"mirror-urls": [],
+					"sha256": "0e24171cf01021bc5dc17d6a9d4f33a048f09d62cc3f62541e95ef104588bda4",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/4c/2b/eddbfc56076fae8deccca274a5c70a9eb1e0b334da0a33f894a420d0fe93/pycryptodome-3.9.8.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"apsw\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "apsw",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "apsw-3.32.2-r1.zip",
+					"mirror-urls": [],
+					"sha256": "38b7e35193a7943992853f9b819cb6d9b7766ae30dd1fdc069da98cfff9f200c",
+					"type": "file",
+					"url": "https://github.com/rogerbinns/apsw/releases/download/3.32.2-r1/apsw-3.32.2-r1.zip"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"webencodings\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "webencodings",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "webencodings-0.5.1.tar.gz",
+					"mirror-urls": [],
+					"sha256": "b36a1c245f2d304965eb4e0a82848379241dc04b865afcc4aab16748587e1923",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/0b/02/ae6ceac1baeda530866a85075641cec12989bd8d31af6d5ab4a3e8c92f47/webencodings-0.5.1.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"html5lib\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "html5lib",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "html5lib-1.1.tar.gz",
+					"mirror-urls": [],
+					"sha256": "b2e5b40261e20f354d198eae92afc10d750afb487ed5e50f9c4eaf07c184146f",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/ac/b6/b55c3f49042f1df3dcd422b7f224f939892ee94f22abcf503a9b7339eaf2/html5lib-1.1.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"pillow\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "pillow",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "Pillow-7.2.0.tar.gz",
+					"mirror-urls": [],
+					"sha256": "97f9e7953a77d5a70f49b9a48da7776dc51e9b738151b22dacf101641594a626",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/3e/02/b09732ca4b14405ff159c470a612979acfc6e8645dc32f83ea0129709f7a/Pillow-7.2.0.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"netifaces\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "netifaces",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "netifaces-0.10.9.tar.gz",
+					"mirror-urls": [],
+					"sha256": "2dee9ffdd16292878336a58d04a20f0ffe95555465fee7c9bd23b3490ef2abf3",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/0d/18/fd6e9c71a35b67a73160ec80a49da63d1eed2d2055054cc2995714949132/netifaces-0.10.9.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"psutil\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "psutil",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "psutil-5.7.2.tar.gz",
+					"mirror-urls": [],
+					"sha256": "90990af1c3c67195c44c9a889184f84f5b2320dce3ee3acbd054e3ba0b4a7beb",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/aa/3e/d18f2c04cf2b528e18515999b0c8e698c136db78f62df34eee89cee205f1/psutil-5.7.2.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"ifaddr\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "ifaddr",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "ifaddr-0.1.7.tar.gz",
+					"mirror-urls": [],
+					"sha256": "1f9e8a6ca6f16db5a37d3356f07b6e52344f6f9f7e806d618537731669eb1a94",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/3d/fc/4ce147e3997cd0ea470ad27112087545cf83bf85015ddb3054673cb471bb/ifaddr-0.1.7.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"zeroconf\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "zeroconf",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "zeroconf-0.28.1.tar.gz",
+					"mirror-urls": [],
+					"sha256": "902e6c3ca4cc752577d650d05a3e7102a897b647fe76da7c0d322cd493cbd1a3",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/e0/20/e394803223e6443ddd5457848ec2c2d058093b912a6ca036cbc537c100ab/zeroconf-0.28.1.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"toml\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [
+				"*"
+			],
+			"name": "toml",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "toml-0.10.1.tar.gz",
+					"mirror-urls": [],
+					"sha256": "926b612be1e5ce0634a2ca03470f95169cf16f939018233a670519cb4ac58b0f",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/da/24/84d5c108e818ca294efe7c1ce237b42118643ce58a14d2462b3b2e3800d5/toml-0.10.1.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"pyparsing\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [
+				"*"
+			],
+			"name": "pyparsing",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "pyparsing-2.4.7.tar.gz",
+					"mirror-urls": [],
+					"sha256": "c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/c1/47/dfc9c342c9842bbe0036c7f763d2d6686bcf5eb1808ba3e170afdb282210/pyparsing-2.4.7.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"packaging\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [
+				"*"
+			],
+			"name": "packaging",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "packaging-20.4.tar.gz",
+					"mirror-urls": [],
+					"sha256": "4357f74f47b9c12db93624a82154e9b120fa8293699949152b22065d556079f8",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/55/fd/fc1aca9cf51ed2f2c11748fa797370027babd82f87829c7a8e6dbe720145/packaging-20.4.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"sip\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [
+				"*"
+			],
+			"name": "sip",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "sip-5.4.0.tar.gz",
+					"mirror-urls": [],
+					"sha256": "4282ab45948674f5ef74278a8e70d1302f65c95b519a0af19409002f5715d641",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/af/68/c603a9d6319ef1126187c42e0b13ac5fcf556d040feded2e574e1a6a27e4/sip-5.4.0.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"pyqt-builder\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [
+				"*"
+			],
+			"name": "pyqt-builder",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "PyQt-builder-1.5.0.tar.gz",
+					"mirror-urls": [],
+					"sha256": "11bbe26e8e3d5ffec6d2ef2f50596b1670eb2d8b49aee0f859821922d8282841",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/37/fd/5bc6351d5d279c797a1d78fec3483a6a9e4b8628073a8ed5448fbe1cf038/PyQt-builder-1.5.0.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"pyqt-sip\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "pyqt-sip",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "PyQt5_sip-12.8.1.tar.gz",
+					"mirror-urls": [],
+					"sha256": "30e944db9abee9cc757aea16906d4198129558533eb7fadbe48c5da2bd18e0bd",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/73/8c/c662b7ebc4b2407d8679da68e11c2a2eb275f5f2242a92610f6e5024c1f2/PyQt5_sip-12.8.1.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"pyqt\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "pyqt",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "PyQt5-5.15.1.tar.gz",
+					"mirror-urls": [],
+					"sha256": "d9a76b850246d08da9863189ecb98f6c2aa9b4d97a3e85e29330a264aed0f9a1",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/1d/31/896dc3dfb6c81c70164019a6cbba6ab037e3af7653d9ca60ccc874ee4c27/PyQt5-5.15.1.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"pyqt-webengine\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "pyqt-webengine",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "PyQtWebEngine-5.15.1.tar.gz",
+					"mirror-urls": [],
+					"sha256": "f0ca7915ee206ba5d703168c6ca40b0aad62c67360328fae4af5359cdbcee439",
+					"type": "file",
+					"url": "https://files.pythonhosted.org/packages/6f/8a/b7c05d582764a92b031f3f2575faf61a43da76218578bf1f9720d63241b6/PyQtWebEngine-5.15.1.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		}
+	],
+	"name": "bypy-generated"
+}

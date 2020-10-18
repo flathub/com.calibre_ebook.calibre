@@ -1,0 +1,15 @@
+diff --git a/bypy/constants.py b/bypy/constants.py
+index 1d92e4f..23939b2 100644
+--- a/bypy/constants.py
++++ b/bypy/constants.py
+@@ -48,9 +48,7 @@ if iswindows:
+     os.environ['TMPDIR'] = os.environ['TEMP'] = os.environ['TMP'] = tempfile.tempdir = r'C:\t\t'  # noqa
+ PREFIX = os.path.join(SW, 'sw')
+ BIN = os.path.join(PREFIX, 'bin')
+-PYTHON = os.path.join(
+-    PREFIX, 'private', 'python', 'python.exe') if iswindows else os.path.join(
+-            BIN, 'python')
++PYTHON = "/usr/bin/python3"
+ cpu_count = os.cpu_count
+ MAKEOPTS = f'-j{cpu_count()}'
+ worker_env = {}

@@ -1,0 +1,13 @@
+diff --git a/bypy/utils.py b/bypy/utils.py
+index 7ce260e..9524057 100644
+--- a/bypy/utils.py
++++ b/bypy/utils.py
+@@ -145,7 +145,7 @@ def run_shell(library_path=False, cwd=None, env=None):
+     sys.stderr.flush(), sys.stdout.flush()
+     if not isatty():
+         raise SystemExit('STDOUT is not a tty, aborting...')
+-    sh = 'C:/cygwin64/bin/zsh' if iswindows else '/bin/zsh'
++    sh = 'C:/cygwin64/bin/zsh' if iswindows else '/bin/bash'
+     env = env or current_env(library_path=library_path)
+     if iswindows:
+         from .constants import cygwin_paths

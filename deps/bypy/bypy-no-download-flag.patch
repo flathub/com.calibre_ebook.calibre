@@ -1,0 +1,29 @@
+diff --git a/bypy/deps.py b/bypy/deps.py
+index cc20a61..2a8b425 100644
+--- a/bypy/deps.py
++++ b/bypy/deps.py
+@@ -139,7 +139,8 @@ def main(parsed_args):
+     other_deps = [
+         dep for dep in all_deps if dep['name'] not in names_of_deps_to_build]
+     init_env(other_deps)
+-    download(deps_to_build)
++    if not parsed_args.no_download:
++        download(deps_to_build)
+ 
+     built_names = set()
+     for dep in deps_to_build:
+diff --git a/bypy/main.py b/bypy/main.py
+index 55270ce..97e7312 100644
+--- a/bypy/main.py
++++ b/bypy/main.py
+@@ -53,6 +53,10 @@ def option_parser():
+     a('--build-only',
+       help='Build only a single extension module when building'
+       ' program, useful for development')
++    a('--no-download',
++      help='Do not attempt to download packages before installing'
++      ' them, all required files must have already been put into'
++      ' place for this to work')
+     return parser
+ 
+ 

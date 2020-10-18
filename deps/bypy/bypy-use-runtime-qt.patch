@@ -1,0 +1,32 @@
+diff --git a/bypy/pkgs/pyqt.py b/bypy/pkgs/pyqt.py
+index de80994..9c6bd1d 100644
+--- a/bypy/pkgs/pyqt.py
++++ b/bypy/pkgs/pyqt.py
+@@ -14,7 +14,7 @@ def run_sip_install(for_webengine=False):
+     qmake = 'qmake' + ('.exe' if iswindows else '')
+     args = (
+         '--no-docstrings --no-make'
+-        f' --qmake={PREFIX}/qt/bin/{qmake} --concatenate=5 --verbose'
++        f' --qmake=/usr/bin/{qmake} --concatenate=5 --verbose'
+     ).split()
+     if iswindows:
+         args.append('--link-full-dll')
+@@ -54,4 +54,4 @@ def post_install_check():
+     q = 'from PyQt5 import sip, QtCore, QtGui'
+     if iswindows:
+         q += ', QtWinExtras'
+-    run(PYTHON, '-c', q, library_path=os.path.join(PREFIX, 'qt', 'lib'))
++    run(PYTHON, '-c', q)
+diff --git a/bypy/utils.py b/bypy/utils.py
+index 7ce260e..1514110 100644
+--- a/bypy/utils.py
++++ b/bypy/utils.py
+@@ -306,7 +306,7 @@ def qt_build(qmake_args='', for_webengine=False, **env):
+         if for_webengine:
+             append_to_path = f'{PREFIX}/private/gnuwin32/bin;{append_to_path}'
+     run(
+-        os.path.join(PREFIX, 'qt', 'bin', 'qmake'),
++        os.path.join('/usr', 'bin', 'qmake'),
+         '..', '--', *qmake_args,
+         library_path=True, append_to_path=append_to_path, **env)
+     if iswindows:

@@ -1,0 +1,59 @@
+diff --git a/bypy/pkgs/apsw.py b/bypy/pkgs/apsw.py
+index 3519d63..0390b3f 100644
+--- a/bypy/pkgs/apsw.py
++++ b/bypy/pkgs/apsw.py
+@@ -18,7 +18,7 @@ def main(args):
+         )
+     else:
+         run(
+-            PYTHON, 'setup.py', 'build', 'install', '--root', build_dir(),
++            PYTHON, 'setup.py', 'build', 'install', '--root', build_dir(), '--prefix', PREFIX,
+             library_path=True)
+     python_install()
+ 
+diff --git a/bypy/pkgs/pyqt.py b/bypy/pkgs/pyqt.py
+index de80994..b26ea6d 100644
+--- a/bypy/pkgs/pyqt.py
++++ b/bypy/pkgs/pyqt.py
+@@ -2,6 +2,7 @@
+ # vim:fileencoding=utf-8
+ # License: GPLv3 Copyright: 2016, Kovid Goyal <kovid at kovidgoyal.net>
+ 
++import distutils.sysconfig
+ import os
+ import re
+ 
+@@ -16,6 +17,7 @@ def run_sip_install(for_webengine=False):
+         '--no-docstrings --no-make'
+         f' --qmake={PREFIX}/qt/bin/{qmake} --concatenate=5 --verbose'
+     ).split()
++    args.append(f'--target={distutils.sysconfig.get_python_lib(prefix=PREFIX)}')
+     if iswindows:
+         args.append('--link-full-dll')
+     if not for_webengine:
+diff --git a/bypy/pkgs/pywin32.py b/bypy/pkgs/pywin32.py
+index b1b5f93..d60c7f3 100644
+--- a/bypy/pkgs/pywin32.py
++++ b/bypy/pkgs/pywin32.py
+@@ -58,7 +58,7 @@ def main(args):
+     with ModifiedEnv(MSSDK_INCLUDE=p['include'], MSSDK_LIB=p['lib']):
+         run(PYTHON, 'setup.py', 'build',
+             '--plat-name=' + ('win-amd64' if is64bit else 'win32'))
+-        run(PYTHON, 'setup.py', '-q', 'install', '--root', build_dir())
++        run(PYTHON, 'setup.py', '-q', 'install', '--root', build_dir(), '--prefix', PREFIX)
+     base = os.path.relpath(PREFIX, '/')
+     q = os.listdir(build_dir())[0]
+     os.rename(os.path.join(build_dir(), base, 'private'),
+diff --git a/bypy/utils.py b/bypy/utils.py
+index 7ce260e..b0b055f 100644
+--- a/bypy/utils.py
++++ b/bypy/utils.py
+@@ -410,7 +410,7 @@ def fix_install_names(m, output_dir):
+ def python_build(extra_args=()):
+     if isinstance(extra_args, str):
+         extra_args = split(extra_args)
+-    run(PYTHON, 'setup.py', 'install', '--root', build_dir(),
++    run(PYTHON, 'setup.py', 'install', '--root', build_dir(), '--prefix', PREFIX,
+         *extra_args, library_path=True)
+ 
+ 

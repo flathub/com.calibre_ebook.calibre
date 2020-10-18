@@ -1,7 +1,9 @@
 app-id: com.calibre_ebook.calibre
-runtime: org.freedesktop.Platform
-runtime-version: '20.08'
-sdk: org.freedesktop.Sdk
+runtime: org.kde.Platform
+runtime-version: '5.15'
+sdk: org.kde.Sdk
+base: io.qt.qtwebengine.BaseApp
+base-version: '5.15'
 command: calibre
 separate-locales: false
 finish-args:
@@ -16,38 +18,44 @@ finish-args:
 modules:
   - name: calibre
     buildsystem: simple
+    build-options:
+      env:
+        - PODOFO_INC_DIR=/app/include/podofo
+        - PODOFO_LIB_DIR=/app/lib
+        - XDG_UTILS_INSTALL_MODE=system
     build-commands:
-      - mkdir -p /app/bin
-      - tar -x -f calibre*.txz -C /app/bin
-      - rm -f calibre*.txz
-      - install -Dm644 /app/bin/resources/images/lt.png /app/share/icons/hicolor/256x256/apps/com.calibre_ebook.calibre.png
-      - install -Dm644 /app/bin/resources/images/tweak.png /app/share/icons/hicolor/256x256/apps/com.calibre_ebook.calibre.ebook_edit.png
-      - install -Dm644 /app/bin/resources/images/viewer.png /app/share/icons/hicolor/256x256/apps/com.calibre_ebook.calibre.ebook_viewer.png
-      - install -Dm644 /app/bin/resources/images/viewer.png /app/share/icons/hicolor/256x256/apps/com.calibre_ebook.calibre.lrfviewer.png
-      - install -Dm644 -t /app/share/metainfo com.calibre_ebook.calibre.appdata.xml
-      - install -Dm644 -t /app/share/applications com.calibre_ebook.calibre.desktop
-      - install -Dm644 -t /app/share/applications com.calibre_ebook.calibre.ebook_edit.desktop
-      - install -Dm644 -t /app/share/applications com.calibre_ebook.calibre.ebook_viewer.desktop
-      - install -Dm644 -t /app/share/applications com.calibre_ebook.calibre.lrfviewer.desktop
+      # Ensure that the used `xdg-utils` will not report errors because they are unable to find any
+      # suitable destionation directory to place their files into
+      - mkdir -p "${FLATPAK_DEST}"/share/{applications,desktop-directories,icons/hicolor,mime/packages}
+
+      # Compile and install Calibre with all its included binary components (uses xdg-utils)
+      - python3 ./setup.py install --prefix="${FLATPAK_DEST}"
+
+      # Rename installed Calibre .desktop files, app icons and appdata XMLs so that Flatpak will not
+      # refuse to use them
+      - python3 ./fixup-exports.py
+    cleanup:
+      - /bin/calibre-uninstall
     sources:
-      - type: file
+      - type: archive
         only-arches:
           - x86_64
-        url: https://download.calibre-ebook.com/5.3.0/calibre-5.3.0-x86_64.txz
+        url: https://download.calibre-ebook.com/5.3.0/calibre-5.3.0.tar.xz
         x-checker-data:
           type: html
           url: https://calibre-ebook.com/download_linux
           version-pattern: The latest release of calibre is ((?:\d+\.)?(?:\d+\.)?\d+)
-          url-template: https://download.calibre-ebook.com/$version/calibre-$version-x86_64.txz
-        sha256: cfc01fd4f55b14f5facf43fee57c89557c84bc718b81a43dce10c50eaacee5cc
-        size: 106742080
+          url-template: https://download.calibre-ebook.com/$version/calibre-$version.tar.xz
+        sha512: e9aacab3d9ff56581d85310ec4cd8a7cd4c80895e368341958693da29ae3a78c4d65f519be96027b1fa59fad909ad0e6684e917c1d035217a4a8e10dd12b075d
+        size: 36567444
+      - type: patch
+        path: calibre-override-sip-target.patch
       - type: file
-        path: com.calibre_ebook.calibre.appdata.xml
-      - type: file
-        path: com.calibre_ebook.calibre.desktop
-      - type: file
-        path: com.calibre_ebook.calibre.ebook_edit.desktop
-      - type: file
-        path: com.calibre_ebook.calibre.ebook_viewer.desktop
-      - type: file
-        path: com.calibre_ebook.calibre.lrfviewer.desktop
+        path: fixup-exports.py
+    modules:
+      # Used to build all upstream managed dependencies
+      - "deps/bypy/bypy.json"
+      # Main dependency list
+      - "deps/bypy-generated/flatpak-modules.json"
+      # Required for installing Calibre desktop integrations (install-time only)
+      - "deps/xdg-utils.json"
