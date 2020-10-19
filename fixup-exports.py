@@ -59,24 +59,59 @@ def rename_appdata_with_desktop(prefix, from_name, to_name):
 	
 	kill_list = set()
 	
-	appdata = xml_etree.parse(xdg_metainfo_dir / f"{from_name}.appdata.xml")
+	appdata = xml_etree.parse(xdg_metainfo_dir / f"{from_name}.metainfo.xml")
+	
+	extra_provides = set()
+	
+	# Record change of appid encoded in file name
+	if from_name != to_name and '.' in from_name:
+		extra_provides.add(from_name if '.' in from_name else f"{from_name}.desktop")
+	
+	# Update AppID encoded into the XML ID element (must match the filename)
+	appid_elem = appdata.find("./id")
+	if appid_elem is not None:
+		app_id = appid_elem.text
+		if app_id != to_name:
+			extra_provides.add(app_id)
+			appid_elem.text = app_id = to_name
 	
 	# Update desktop file location to match new appid/`to_name`
-	appid_elem = appdata.find(".[@type='desktop']/id")
-	if appid_elem is not None:
-		appid = appid_elem.text
-		if appid.endswith(".desktop"):
-			appid = appid[:-len(".desktop")]
+	for launchable_elem in appdata.findall("./launchable[@type='desktop-id']"):
+		desktop_id = launchable_elem.text
+		if desktop_id.endswith(".desktop"):
+			desktop_id = desktop_id[:-len(".desktop")]
 		
-		kill_list |= rename_desktop_with_icon(prefix, appid, to_name)
-		appid_elem.text = appid = to_name
+		kill_list |= rename_desktop_with_icon(prefix, desktop_id, to_name)
+		launchable_elem.text = desktop_id = f"{to_name}.desktop"
+		break  # Can only actually handle one launchable here or the resulting filenames would conflict
+	
+	# Add collected provides IDs
+	provides_elem = appdata.find("./provides")
+	if provides_elem is None:
+		provides_elem = xml_etree.Element("provides")
+		appdata.getroot().append(provides_elem)
+	existing_provides = set(e.text for e in provides_elem.findall("id"))
+	for provide_id in sorted(extra_provides - existing_provides):
+		provide_id_elem = xml_etree.Element("id")
+		provide_id_elem.text = provide_id
+		provides_elem.append(provide_id_elem)
+	
+	# Redact all URLs for any description due to stupid `appstreamcli`/flathub rule
+	#
+	# This is just retarded!
+	for description_elem in appdata.findall(".//description"):
+		for elem in description_elem.iter():
+			if elem.text:
+				elem.text = elem.text.replace("https://", "").replace("http://", "")
+			if elem.tail:
+				elem.tail = elem.tail.replace("https://", "").replace("http://", "")
 	
 	# Write back new (possibly modified) appdata XML file
 	appdata.write(xdg_metainfo_dir / f"{to_name}.appdata.xml", encoding="utf-8", xml_declaration=True)
 	
 	# Queue previous appdata XML file for removal
 	if from_name != to_name:
-		kill_list.add(xdg_metainfo_dir / f"{from_name}.appdata.xml")
+		kill_list.add(xdg_metainfo_dir / f"{from_name}.metainfo.xml")
 	
 	return kill_list
 
@@ -95,6 +130,7 @@ def main(argv=sys.argv[1:], program=sys.argv[0]):
 	except SystemExit as exc:
 		return exc.code
 	
+	# XDG application metadata
 	kill_list = set()
 	kill_list |= rename_appdata_with_desktop(args.prefix, "calibre-gui",          f"{args.appid}")
 	kill_list |= rename_appdata_with_desktop(args.prefix, "calibre-ebook-edit",   f"{args.appid}.ebook_edit")
@@ -104,6 +140,10 @@ def main(argv=sys.argv[1:], program=sys.argv[0]):
 	# Remove now unused files
 	for path in kill_list:
 		path.unlink()
+	
+	# Declared MIME types
+	xdg_mime_package_dir = args.prefix / "share" / "mime" / "packages"
+	shutil.move(xdg_mime_package_dir / "calibre-mimetypes.xml", xdg_mime_package_dir / f"{args.appid}.xml")
 	
 	return 0
 

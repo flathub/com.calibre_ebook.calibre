@@ -1,0 +1,28 @@
+commit 03b811420d994198041a3912da7092296553a6c5
+Author: Alexander Schlarb <alexander@ninetailed.ninja>
+Date:   Mon Oct 19 15:19:52 2020 +0200
+
+    Add OARS (Open Age Rating Service) metadata to generated Linux AppStream files
+
+diff --git a/src/calibre/linux.py b/src/calibre/linux.py
+index c16d974975..c7b62dbdd5 100644
+--- a/src/calibre/linux.py
++++ b/src/calibre/linux.py
+@@ -1200,8 +1200,16 @@ def write_appdata(key, entry, base, translators):
+         E.metadata_license('CC0-1.0'),
+         E.project_license('GPL-3.0'),
+         E.summary(entry['summary']),
++        E.content_rating(
++            # Information Sharing: Using any online API, e.g. a user-counter
++            # Details at https://calibre-ebook.com/dynamic/calibre-usage .
++            E.content_attribute('mild', id='social-info'),
++            # In-App Purchases: Users are encouraged to donate real money, e.g. using Patreon
++            E.content_attribute('mild', id='money-purchasing'),
++            type='oars-1.1'
++        ),
+         description,
+-        E.url('https://calibre-ebook.com', type='homepage'),
++        E.url('https://calibre-ebook.com/', type='homepage'),
+         screenshots,
+         type='desktop'
+     )

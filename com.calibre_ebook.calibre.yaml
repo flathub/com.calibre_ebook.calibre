@@ -50,6 +50,10 @@ modules:
         size: 36567444
       - type: patch
         path: calibre-override-sip-target.patch
+      - type: patch
+        path: calibre-appstream-oars.patch
+      - type: patch
+        path: calibre-appstream-releases.patch
       - type: file
         path: fixup-exports.py
     modules:
@@ -59,3 +63,14 @@ modules:
       - "deps/bypy-generated/flatpak-modules.json"
       # Required for installing Calibre desktop integrations (install-time only)
       - "deps/xdg-utils.json"
+      # Additional dependency included in `calibre-appstream-releases.patch`
+      - name: PyYAML
+        buildsystem: simple
+        build-commands:
+          - python3 setup.py install --prefix="${FLATPAK_DEST}"
+        cleanup:
+          - '*'
+        sources:
+          - type: archive
+            url: https://files.pythonhosted.org/packages/64/c2/b80047c7ac2478f9501676c988a5411ed5572f35d1beff9cae07d321512c/PyYAML-5.3.1.tar.gz
+            sha256: b8eac752c5e14d3eca0e6dd9199cd627518cb5ec06add0de9d32baeee6fe645d
