@@ -9,7 +9,8 @@ finish-args:
   - --filesystem=host
   - --share=ipc
   - --share=network
-  - --socket=x11
+  - --socket=fallback-x11
+  - --socket=wayland
   - --system-talk-name=org.freedesktop.NetworkManager
   - --system-talk-name=org.freedesktop.UDisks2
   - --talk-name=org.freedesktop.Notifications
