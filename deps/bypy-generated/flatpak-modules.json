@@ -369,11 +369,11 @@
 			"sources": [
 				{
 					"dest": "sources",
-					"dest-filename": "css-parser-1.0.4.tar.gz",
+					"dest-filename": "css-parser-1.0.6.tar.gz",
 					"mirror-urls": [],
-					"sha256": "c7ab355512ae51334ba6791a7e4d553f87bef17ba2026f1cc9bf3b17a7779d44",
+					"sha256": "4ed448a8a5622edb1d30d616bbc4bd3d30f11be922343d7a92d7e418e324af2e",
 					"type": "file",
-					"url": "https://files.pythonhosted.org/packages/38/97/94c9cdb2410d4f89749fa947338970203ef26f2bdb7ac089ab96a87763d2/css-parser-1.0.4.tar.gz"
+					"url": "https://files.pythonhosted.org/packages/79/a5/4c11875f4adc8a3a37b79546dcba6304efdf1ca944e390aeb0fced4ee2ff/css-parser-1.0.6.tar.gz"
 				},
 				{
 					"dest": "src/bypy",

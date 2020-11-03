@@ -9,9 +9,9 @@
 	"cleanup": ["*"],
 	"sources": [
 		{
-			"sha512": "9271c26e64cc47de446c206ddf34615c123be5c2cbff69e18a1f84632a2e498f72750f9d1078a40556c9f626a29befd5d0f849df9323b803000338f14b12d104",
+			"sha512": "4b17cccf56ec57dbacf9f3bab3a24c383b42f1e843ce4aea91a06dc375ebdd118662ce7bb5723dd693e35b9a4cdb65309238e9a7c9f7933ca9c29d5583b63d34",
 			"type": "archive",
-			"url": "https://github.com/kovidgoyal/bypy/archive/e0811601269216758ecb9988b4f21d6b56419bbc.zip"
+			"url": "https://github.com/kovidgoyal/bypy/archive/b865e92010d539c7a2d3f9473ecf64e08df04765.zip"
 		},
 		
 		{
