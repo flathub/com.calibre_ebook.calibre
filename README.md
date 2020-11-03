@@ -30,11 +30,12 @@ To update this Flatpak to a new version, follow these steps:
 
   1. Perform a deep clone of this GIT repository:  
      `git clone --recursive https://github.com/flathub/com.calibre_ebook.calibre.git`
-  2. Regenerate the list of Flatpak dependency modules from Calibre's bypy configuration:  
+  2. Update the `bypy` submodule to the latest upstream commit:  
+     `git submodule update --remote`
+  3. Regenerate the list of Flatpak dependency modules from Calibre's bypy configuration:  
      `deps/bypy-generated/generate.py`
-  3. Use `git diff` to review the changes the script has made
-  4. Update the *sources* section of *com.calibre_ebook.calibre.yaml* to point to the new source release version and its hash.
-  5. Similarily, update the *sources* section of *deps/bypy/bypy.json* to point to the latest commit of bypy, if it changed from the previous value.
+  4. Use `git diff` to review the changes the script has made
+  5. Update the *sources* section of *com.calibre_ebook.calibre.yaml* to point to the new source release version and its hash.
   6. If you are able to, perform a local test-build using `flatpak-builder`:  
      `flatpak-builder --force-clean --ccache --repo repo build com.calibre_ebook.calibre.yaml`
        * If any of the patches fail to apply, check if they are still needed and, if so, fix them.
