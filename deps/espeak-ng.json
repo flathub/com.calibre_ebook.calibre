@@ -1,0 +1,49 @@
+{
+	"name": "espeak-ng",
+	"buildsystem": "autotools",
+	"no-parallel-make": true,
+	"sources": [
+		{
+			"type": "archive",
+			"url": "https://github.com/espeak-ng/espeak-ng/releases/download/1.50/espeak-ng-1.50.tgz",
+			"sha256": "80ee6cd06fcd61888951ab49362b400e80dd1fac352a8b1131d90cfe8a210edb"
+		},
+		{
+			"type": "patch",
+			"path": "espeak-ng.no-common.patch"
+		},
+		{
+			"type": "shell",
+			"commands": [
+				"./autogen.sh"
+			]
+		}
+	],
+	"cleanup": [
+		"*.a",
+		"*.la",
+		"/bin"
+	],
+
+	"modules": [
+		{
+			"name": "pcaudiolib",
+			"buildsystem": "autotools",
+			"config-opts": [
+				"--with-alsa=no",
+				"--with-oss=no"
+			],
+			"sources": [
+				{
+					"type": "archive",
+					"url": "https://github.com/espeak-ng/pcaudiolib/archive/1.1.tar.gz",
+					"sha256": "699a5a347b1e12dc5b122e192e19f4db01621826bf41b9ebefb1cbc63ae2180b"
+				}
+			],
+			"cleanup": [
+				"*.a",
+				"*.la"
+			]
+		}
+	]
+}

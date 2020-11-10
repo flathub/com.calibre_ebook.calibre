@@ -1,0 +1,19 @@
+commit e11cd42b03d1628f7a0cf45c9406123282e25c63
+Author: Reece H. Dunn <msclrhd@gmail.com>
+Date:   Thu Jan 9 21:11:42 2020 +0000
+
+    fix #699: avoid samplerate clashing with LTO in gcc 10.
+
+diff --git a/src/espeak-ng.c b/src/espeak-ng.c
+index 10b8a887..3a7838cf 100644
+--- a/src/espeak-ng.c
++++ b/src/espeak-ng.c
+@@ -117,7 +117,7 @@ static const char *help_text =
+     "--load     Load voice from a file in current directory by name.\n"
+     "-h, --help Show this help.\n";
+ 
+-int samplerate;
++static int samplerate;
+ bool quiet = false;
+ unsigned int samples_total = 0;
+ unsigned int samples_split = 0;
