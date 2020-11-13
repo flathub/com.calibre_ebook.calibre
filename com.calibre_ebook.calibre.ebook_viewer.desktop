@@ -2,8 +2,11 @@
 Type=Application
 Version=1.1
 Name=E-book viewer
+GenericName=Viewer for E-books
+Comment=Viewer for E-books in all the major formats
 Icon=com.calibre_ebook.calibre.ebook_viewer
 TryExec=ebook-viewer
 Exec=ebook-viewer %f
 Terminal=false
 Categories=Graphics;Viewer;
+MimeType=application/x-sony-bbeb;image/vnd.djvu;text/html;application/epub+zip;application/vnd.openxmlformats-officedocument.wordprocessingml.document;application/oebps-package+xml;application/x-mobipocket-ebook;application/x-mobipocket-subscription;application/ereader;application/x-mobi8-ebook;text/plain;text/rtf;application/x-cbc;text/x-markdown;application/vnd.oasis.opendocument.text;application/pdf;application/xhtml+xml;application/x-cbr;application/x-ruby;text/fb2+xml;application/x-cbz;application/vnd.ms-word.document.macroenabled.12;

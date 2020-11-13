@@ -6,21 +6,31 @@
   </provides>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0</project_license>
-  <name>Calibre</name>
-  <summary>E-book manager</summary>
+  <name>calibre</name>
+  <summary>The one stop solution to all your e-book needs</summary>
   <description>
     <p>
-      Calibre is an e-book manager. It can view, convert, edit and catalog
-      e-books in all of the major e-book formats. It can also talk to e-book
-      reader devices. It can go out to the internet and fetch metadata for
-      your books. It can download newspapers and convert them into e-books
-      for convenient reading. It is cross platform, running on Linux, Windows
-      and macOS.
+      calibre is the one stop solution to all your e-book needs.
+    </p>
+    <p>
+      You can use calibre to catalog your books, fetch metadata for them
+      automatically, convert them from and to all the various e-book formats,
+      send them to your e-book reader devices, read the books on your
+      computer, edit the books in a dedicated e-book editor and even make
+      them available over the network with the built-in Content server. You
+      can also download news and periodicals in e-book format from over a
+      thousand different news and magazine websites.
     </p>
   </description>
   <screenshots>
     <screenshot type="default">
-      <image>https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg</image>
+      <image width="1408" height="792">https://lh4.googleusercontent.com/-bNE1hc_3pIc/UvHLwKPGBPI/AAAAAAAAASA/8oavs_c6xoU/w1408-h792-no/main-default.png</image>
+    </screenshot>
+    <screenshot>
+      <image width="1408" height="792">https://lh4.googleusercontent.com/-Zu2httSKABE/UvHMYK30JJI/AAAAAAAAATg/dQTQUjBvV5s/w1408-h792-no/main-grid.png</image>
+    </screenshot>
+    <screenshot>
+      <image width="1408" height="792">https://lh3.googleusercontent.com/-_trYUjU_BaY/UvHMYSdKhlI/AAAAAAAAATc/auPA3gyXc6o/w1408-h792-no/main-flow.png</image>
     </screenshot>
   </screenshots>
   <url type="homepage">https://calibre-ebook.com/</url>
@@ -47,5 +57,8 @@
     <release version="4.13.0" date="2020-03-27"/>
     <release version="4.12.0" date="2020-03-06"/>
   </releases>
-  <content_rating type="oars-1.0"/>
+  <content_rating type="oars-1.1">
+    <content_attribute id="social-info">mild</content_attribute>
+    <content_attribute id="money-purchasing">mild</content_attribute>
+  </content_rating>
 </component>

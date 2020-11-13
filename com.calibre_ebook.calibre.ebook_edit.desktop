@@ -2,8 +2,11 @@
 Type=Application
 Version=1.1
 Name=E-book editor
+GenericName=Editor for E-books
+Comment=Edit E-books in various formats
 Icon=com.calibre_ebook.calibre.ebook_edit
 TryExec=ebook-edit
 Exec=ebook-edit %f
 Terminal=false
-Categories=Graphics;Editor;
+Categories=Office;
+MimeType=application/epub+zip;application/vnd.openxmlformats-officedocument.wordprocessingml.document;application/xhtml+xml;text/html;application/x-mobi8-ebook;
