@@ -16,6 +16,8 @@ finish-args:
   - --system-talk-name=org.freedesktop.NetworkManager
   - --system-talk-name=org.freedesktop.UDisks2
   - --talk-name=org.freedesktop.Notifications
+  - --talk-name=org.kde.StatusNotifierWatcher
+  - --own-name=org.kde.StatusNotifierItem-2-1
   - --env=QTWEBENGINEPROCESS_PATH=/app/bin/QtWebEngineProcess
 cleanup:
   # Unneeded files from bypy-generated packages
@@ -108,14 +110,14 @@ modules:
       - type: archive
         only-arches:
           - x86_64
-        url: https://download.calibre-ebook.com/5.4.2/calibre-5.4.2.tar.xz
+        url: https://download.calibre-ebook.com/5.5.0/calibre-5.5.0.tar.xz
         x-checker-data:
           type: html
           url: https://calibre-ebook.com/download_linux
           version-pattern: The latest release of calibre is ((?:\d+\.)?(?:\d+\.)?\d+)
-          url-template: https://download.calibre-ebook.com/$version/calibre-$version.tar.xz
-        sha512: ef3839f5ff4ceecb3bbd6c84819d6f57cc4bb2a1ae789a9dcf8f029680bc778ef86f9c2eb01832c4990f68c2de892eedafa449205470cec4d86a3bbe9d4b4527
-        size: 36596800
+          url-template: https://download.calibre-ebook.com/$version/calibre-$version-x86_64.txz
+        sha256: 01cebfd1ee7b05cd7393991818ce829d8bb080db5d12fe86111d242864660224
+        size: 36608648
       - type: patch
         path: calibre-override-sip-target.patch
       - type: file
