@@ -15,7 +15,6 @@ finish-args:
   - --socket=wayland
   - --system-talk-name=org.freedesktop.NetworkManager
   - --system-talk-name=org.freedesktop.UDisks2
-  - --talk-name=org.freedesktop.Notifications
   - --talk-name=org.kde.StatusNotifierWatcher
   - --own-name=org.kde.StatusNotifierItem-2-1
   - --env=QTWEBENGINEPROCESS_PATH=/app/bin/QtWebEngineProcess
