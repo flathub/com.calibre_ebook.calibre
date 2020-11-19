@@ -126,6 +126,5 @@ modules:
       - "deps/bypy/bypy.json"
       # Main dependency list
       - "deps/bypy-generated/flatpak-modules.json"
-      - "deps/espeak-ng.json"
       # Required for installing Calibre desktop integrations (install-time only)
       - "deps/xdg-utils.json"
