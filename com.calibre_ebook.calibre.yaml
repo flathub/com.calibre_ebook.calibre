@@ -71,6 +71,9 @@ cleanup:
   - /lib/python*/site-packages/PyQt5/QtWebEngine.*.so
   - /lib/python*/site-packages/PyQt5/QtWebSockets.*.so
 
+  # Package: PyQt5-webengine
+  - /lib/qml
+
   # Left-over Python bytecode files from build-time only modules
   #
   #XXX: A much better solution would be to have to bytecode be generated immediately
