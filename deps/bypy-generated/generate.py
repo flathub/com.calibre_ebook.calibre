@@ -101,6 +101,7 @@ CALIBRE_PKG_BLACKLIST = frozenset([
 	#"sip",
 	#"pyqt-builder",
 	#"pyqt-sip",
+	#"speech-dispatcher-client",
 	#"pyqt",
 	#"pyqt-webengine",
 ])

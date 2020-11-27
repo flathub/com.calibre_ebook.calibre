@@ -992,6 +992,29 @@
 		},
 		{
 			"build-commands": [
+				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"speech-dispatcher-client\""
+			],
+			"buildsystem": "simple",
+			"cleanup": [],
+			"name": "speech-dispatcher-client",
+			"sources": [
+				{
+					"dest": "sources",
+					"dest-filename": "speech-dispatcher-0.10.1.tar.gz",
+					"mirror-urls": [],
+					"sha256": "098c9e56f3226b2d9b98ba23b154bfc54ad29cdd3f2bc3e5cbb9eb55e7775448",
+					"type": "file",
+					"url": "https://github.com/brailcom/speechd/releases/download/0.10.1/speech-dispatcher-0.10.1.tar.gz"
+				},
+				{
+					"dest": "src/bypy",
+					"path": "bypy-data/src/bypy/sources.json",
+					"type": "file"
+				}
+			]
+		},
+		{
+			"build-commands": [
 				"BYPY_ROOT=\"${PWD}\" bypy main --no-download \"pyqt\""
 			],
 			"buildsystem": "simple",

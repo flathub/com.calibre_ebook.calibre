@@ -109,14 +109,14 @@ modules:
       - type: archive
         only-arches:
           - x86_64
-        url: https://download.calibre-ebook.com/5.5.0/calibre-5.5.0.tar.xz
+        url: https://download.calibre-ebook.com/5.6.0/calibre-5.6.0.tar.xz
         x-checker-data:
           type: html
           url: https://calibre-ebook.com/download_linux
           version-pattern: The latest release of calibre is ((?:\d+\.)?(?:\d+\.)?\d+)
-          url-template: https://download.calibre-ebook.com/$version/calibre-$version-x86_64.txz
-        sha256: 01cebfd1ee7b05cd7393991818ce829d8bb080db5d12fe86111d242864660224
-        size: 36608648
+          url-template: https://download.calibre-ebook.com/$version/calibre-$version.tar.xz
+        sha256: 484a2e120fdbcff6c544d4c216afef0ff784c7665d3fd44d98acb0420d8f5e55
+        size: 36653328
       - type: patch
         path: calibre-override-sip-target.patch
       - type: file
