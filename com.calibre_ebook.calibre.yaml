@@ -14,7 +14,6 @@ finish-args:
   - --socket=x11
   - --socket=wayland
   - --filesystem=xdg-run/speech-dispatcher/speechd.sock
-  - --system-talk-name=org.freedesktop.NetworkManager
   - --system-talk-name=org.freedesktop.UDisks2
   - --talk-name=org.kde.StatusNotifierWatcher
   - --own-name=org.kde.StatusNotifierItem-2-1
