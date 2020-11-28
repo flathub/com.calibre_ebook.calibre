@@ -21,19 +21,30 @@ finish-args:
 modules:
   - name: calibre
     buildsystem: simple
+    build-options:
+      env:
+        - XDG_UTILS_INSTALL_MODE=system
     build-commands:
-      - mkdir -p /app/bin
-      - tar -x -f calibre*.txz -C /app/bin
+      # Extract Calibre archive to target location
+      - mkdir -p "${FLATPAK_DEST}/lib/calibre"
+      - tar -xvf calibre*.txz -C "${FLATPAK_DEST}/lib/calibre"
       - rm -f calibre*.txz
-      - install -Dm644 /app/bin/resources/images/lt.png /app/share/icons/hicolor/256x256/apps/com.calibre_ebook.calibre.png
-      - install -Dm644 /app/bin/resources/images/tweak.png /app/share/icons/hicolor/256x256/apps/com.calibre_ebook.calibre.ebook_edit.png
-      - install -Dm644 /app/bin/resources/images/viewer.png /app/share/icons/hicolor/256x256/apps/com.calibre_ebook.calibre.ebook_viewer.png
-      - install -Dm644 /app/bin/resources/images/viewer.png /app/share/icons/hicolor/256x256/apps/com.calibre_ebook.calibre.lrfviewer.png
-      - install -Dm644 -t /app/share/metainfo com.calibre_ebook.calibre.appdata.xml
-      - install -Dm644 -t /app/share/applications com.calibre_ebook.calibre.desktop
-      - install -Dm644 -t /app/share/applications com.calibre_ebook.calibre.ebook_edit.desktop
-      - install -Dm644 -t /app/share/applications com.calibre_ebook.calibre.ebook_viewer.desktop
-      - install -Dm644 -t /app/share/applications com.calibre_ebook.calibre.lrfviewer.desktop
+
+      # Ensure that Calibre install script and the `xdg-utils` it uses will not
+      # report errors because they are unable to find any suitable destionation
+      # directory to place their files into
+      - mkdir -p "${FLATPAK_DEST}/bin" "${FLATPAK_DEST}"/share/{applications,desktop-directories,icons/hicolor,mime/packages}
+
+      # Run Calibre system integration scripts
+      - /app/lib/calibre/calibre_postinstall --root="${FLATPAK_DEST}"
+
+      # Rename installed Calibre .desktop files, app icons and appdata XMLs so that Flatpak will not
+      # refuse to use them
+      - python3 ./fixup-exports.py
+    cleanup:
+      - /bin/calibre-uninstall
+      - /share/applications/mimeinfo.cache
+      - /lib/calibre/resources/fonts/liberation  # Included in runtime image
     sources:
       - type: file
         only-arches:
@@ -47,12 +58,6 @@ modules:
         sha256: 37715ef44a75d4ae7cf2fc9a379805837a29b44f1eeacfab853a0b4acd73157a
         size: 108232300
       - type: file
-        path: com.calibre_ebook.calibre.appdata.xml
-      - type: file
-        path: com.calibre_ebook.calibre.desktop
-      - type: file
-        path: com.calibre_ebook.calibre.ebook_edit.desktop
-      - type: file
-        path: com.calibre_ebook.calibre.ebook_viewer.desktop
-      - type: file
-        path: com.calibre_ebook.calibre.lrfviewer.desktop
+        path: fixup-exports.py
+    modules:
+      - xdg-utils.json
