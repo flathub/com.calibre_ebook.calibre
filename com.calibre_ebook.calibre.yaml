@@ -12,7 +12,7 @@ finish-args:
   - --share=network
   - --socket=x11
   - --socket=wayland
-  - --system-talk-name=org.freedesktop.NetworkManager
+  - --filesystem=xdg-run/speech-dispatcher:ro
   - --system-talk-name=org.freedesktop.UDisks2
   - --talk-name=com.canonical.AppMenu.Registrar
   - --talk-name=org.kde.StatusNotifierWatcher
