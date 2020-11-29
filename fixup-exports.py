@@ -33,7 +33,15 @@ def rename_desktop_with_icon(prefix, from_name, to_name):
 	kill_list = set()
 	
 	# Read original desktop file
-	desktop_file = configparser.RawConfigParser()
+	desktop_file = configparser.ConfigParser(
+		allow_no_value          = False,
+		delimiters              = ("=",),
+		comment_prefixes        = ("#",),
+		inline_comment_prefixes = None,
+		interpolation           = None,
+		strict                  = False,
+		empty_lines_in_values   = False,
+	)
 	desktop_file.optionxform = lambda option: option  # Prevent lower-casing of option names
 	assert desktop_file.read(xdg_applications_dir / f"{from_name}.desktop", encoding="utf-8")
 	
@@ -45,7 +53,7 @@ def rename_desktop_with_icon(prefix, from_name, to_name):
 	
 	# Write back new (possibly modified) .desktop file
 	with open(xdg_applications_dir / f"{to_name}.desktop", "w", encoding="utf-8") as f:
-		desktop_file.write(f)
+		desktop_file.write(f, space_around_delimiters=False)
 	
 	# Queue previous desktop file for removal
 	if from_name != to_name:
