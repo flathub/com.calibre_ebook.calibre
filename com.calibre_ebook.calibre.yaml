@@ -21,19 +21,29 @@ finish-args:
 modules:
   - name: calibre
     buildsystem: simple
+    build-options:
+      env:
+        - XDG_UTILS_INSTALL_MODE=system
     build-commands:
-      - mkdir -p /app/bin
-      - tar -x -f calibre*.txz -C /app/bin
+      # Extract Calibre archive to target location
+      - mkdir -p "${FLATPAK_DEST}/lib/calibre"
+      - tar -xvf calibre*.txz -C "${FLATPAK_DEST}/lib/calibre"
       - rm -f calibre*.txz
-      - install -Dm644 /app/bin/resources/images/lt.png /app/share/icons/hicolor/256x256/apps/com.calibre_ebook.calibre.png
-      - install -Dm644 /app/bin/resources/images/tweak.png /app/share/icons/hicolor/256x256/apps/com.calibre_ebook.calibre.ebook_edit.png
-      - install -Dm644 /app/bin/resources/images/viewer.png /app/share/icons/hicolor/256x256/apps/com.calibre_ebook.calibre.ebook_viewer.png
-      - install -Dm644 /app/bin/resources/images/viewer.png /app/share/icons/hicolor/256x256/apps/com.calibre_ebook.calibre.lrfviewer.png
-      - install -Dm644 -t /app/share/metainfo com.calibre_ebook.calibre.appdata.xml
-      - install -Dm644 -t /app/share/applications com.calibre_ebook.calibre.desktop
-      - install -Dm644 -t /app/share/applications com.calibre_ebook.calibre.ebook_edit.desktop
-      - install -Dm644 -t /app/share/applications com.calibre_ebook.calibre.ebook_viewer.desktop
-      - install -Dm644 -t /app/share/applications com.calibre_ebook.calibre.lrfviewer.desktop
+
+      # Ensure that Calibre install script and the `xdg-utils` it uses will not
+      # report errors because they are unable to find any suitable destination
+      # directory to place their files into
+      - mkdir -p "${FLATPAK_DEST}/bin" "${FLATPAK_DEST}"/share/{applications,desktop-directories,icons/hicolor,mime/packages}
+
+      # Run Calibre system integration scripts
+      - /app/lib/calibre/calibre_postinstall --root="${FLATPAK_DEST}"
+
+      # Rename installed Calibre .desktop files, app icons and appdata XMLs so that Flatpak will not
+      # refuse to use them
+      - python3 ./fixup-exports.py
+    cleanup:
+      - /bin/calibre-uninstall
+      - /share/applications/mimeinfo.cache
     sources:
       - type: file
         only-arches:
@@ -47,12 +57,36 @@ modules:
         sha256: 37715ef44a75d4ae7cf2fc9a379805837a29b44f1eeacfab853a0b4acd73157a
         size: 108232300
       - type: file
-        path: com.calibre_ebook.calibre.appdata.xml
-      - type: file
-        path: com.calibre_ebook.calibre.desktop
-      - type: file
-        path: com.calibre_ebook.calibre.ebook_edit.desktop
-      - type: file
-        path: com.calibre_ebook.calibre.ebook_viewer.desktop
-      - type: file
-        path: com.calibre_ebook.calibre.lrfviewer.desktop
+        path: fixup-exports.py
+    modules:
+      # Required by post-installation script only
+      - name: xdg-utils
+        buildsystem: autotools
+        cleanup: ["*"]
+        sources:
+          - type: archive
+            url: https://portland.freedesktop.org/download/xdg-utils-1.1.3.tar.gz
+            sha1: 98294cf332c341b85e481d98e9ea59357fe1efc7
+            sha256: d798b08af8a8e2063ddde6c9fa3398ca81484f27dec642c5627ffcaa0d4051d9
+        modules:
+          # Required by xmlto for converting HTML files to plain text
+          #
+          # Technically, we don't need this but patching the xmlto dependency
+          # out of xdg-utils just isn't worth it.
+          - name: links
+            buildsystem: autotools
+            post-install:
+              - ln -s links /app/bin/elinks
+            cleanup: ["*"]
+            sources:
+              - type: archive
+                url: http://links.twibright.com/download/links-2.21.tar.bz2
+                sha256: 285eed8591c7781ec26213df82786665aaa1b9286782e8a7a1a7e2a6e1630d63
+          # Required by xdg-util's build system
+          - name: xmlto
+            buildsystem: autotools
+            cleanup: ["*"]
+            sources:
+              - type: archive
+                url: https://releases.pagure.org/xmlto/xmlto-0.0.28.tar.bz2
+                sha256: 1130df3a7957eb9f6f0d29e4aa1c75732a7dfb6d639be013859b5c7ec5421276
