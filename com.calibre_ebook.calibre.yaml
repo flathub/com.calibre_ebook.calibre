@@ -44,7 +44,6 @@ modules:
     cleanup:
       - /bin/calibre-uninstall
       - /share/applications/mimeinfo.cache
-      - /lib/calibre/resources/fonts/liberation  # Included in runtime image
     sources:
       - type: file
         only-arches:
