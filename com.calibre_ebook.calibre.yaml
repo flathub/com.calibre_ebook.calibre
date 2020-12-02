@@ -60,8 +60,10 @@ modules:
       - desktop-file-edit --set-key Icon --set-value $FLATPAK_ID $FLATPAK_DEST/share/applications/$FLATPAK_ID.desktop
 
       # post-install for metainfo
-      - patch -i metainfo.patch -u $FLATPAK_DEST/share/metainfo/calibre-gui.metainfo.xml
       - mv $FLATPAK_DEST/share/metainfo/{calibre-gui,$FLATPAK_ID}.metainfo.xml
+      - appstream-util modify $FLATPAK_DEST/share/metainfo/$FLATPAK_ID.metainfo.xml id $FLATPAK_ID
+      - appstream-util modify $FLATPAK_DEST/share/metainfo/$FLATPAK_ID.metainfo.xml launchable $FLATPAK_ID.desktop
+      - appstream-util add-provide $FLATPAK_DEST/share/metainfo/${FLATPAK_ID}.metainfo.xml id calibre-gui.desktop
     cleanup:
       - /bin/calibre-uninstall
       - /share/applications/mimeinfo.cache
@@ -77,8 +79,6 @@ modules:
           url-template: https://download.calibre-ebook.com/$version/calibre-$version-x86_64.txz
         sha256: 37715ef44a75d4ae7cf2fc9a379805837a29b44f1eeacfab853a0b4acd73157a
         size: 108232300
-      - type: file
-        path: metainfo.patch
     modules:
       # Required by post-installation script only
       - name: xdg-utils
