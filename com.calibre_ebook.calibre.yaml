@@ -38,9 +38,30 @@ modules:
       # Run Calibre system integration scripts
       - /app/lib/calibre/calibre_postinstall --root="${FLATPAK_DEST}"
 
-      # Rename installed Calibre .desktop files, app icons and appdata XMLs so that Flatpak will not
-      # refuse to use them
-      - python3 ./fixup-exports.py
+      # post-install for ebook-edit
+      - mv $FLATPAK_DEST/share/applications/{calibre-ebook-edit,$FLATPAK_ID.ebook-edit}.desktop
+      - for p in 16 32 48 64 128 256; do mv $FLATPAK_DEST/share/icons/hicolor/${p}x${p}/apps/{calibre-ebook-edit,$FLATPAK_ID.ebook-edit}.png; done
+      - desktop-file-edit --set-key Icon --set-value $FLATPAK_ID.ebook-edit $FLATPAK_DEST/share/applications/$FLATPAK_ID.ebook-edit.desktop
+
+      # post-install for ebook-viewer
+      # NOTE: Upstream desktop and icon basenames do not match
+      - mv $FLATPAK_DEST/share/applications/{calibre-ebook-viewer,$FLATPAK_ID.ebook-viewer}.desktop
+      - for p in 16 32 48 64 128 256; do mv $FLATPAK_DEST/share/icons/hicolor/${p}x${p}/apps/{calibre-viewer,$FLATPAK_ID.ebook-viewer}.png; done
+      - desktop-file-edit --set-key Icon --set-value $FLATPAK_ID.ebook-viewer $FLATPAK_DEST/share/applications/$FLATPAK_ID.ebook-viewer.desktop
+
+      # post-install for lrfviewer
+      # NOTE: Both lrfviewer and ebook-viewer share the same icon
+      - mv $FLATPAK_DEST/share/applications/{calibre-lrfviewer,$FLATPAK_ID.lrfviewer}.desktop
+      - desktop-file-edit --set-key Icon --set-value $FLATPAK_ID.ebook-viewer $FLATPAK_DEST/share/applications/$FLATPAK_ID.lrfviewer.desktop
+
+      # post-install for calibre
+      - mv $FLATPAK_DEST/share/applications/{calibre-gui,$FLATPAK_ID}.desktop
+      - for p in 16 32 48 64 128 256; do mv $FLATPAK_DEST/share/icons/hicolor/${p}x${p}/apps/{calibre-gui,$FLATPAK_ID}.png; done
+      - desktop-file-edit --set-key Icon --set-value $FLATPAK_ID $FLATPAK_DEST/share/applications/$FLATPAK_ID.desktop
+
+      # post-install for metainfo
+      - patch -i metainfo.patch -u $FLATPAK_DEST/share/metainfo/calibre-gui.metainfo.xml
+      - mv $FLATPAK_DEST/share/metainfo/{calibre-gui,$FLATPAK_ID}.metainfo.xml
     cleanup:
       - /bin/calibre-uninstall
       - /share/applications/mimeinfo.cache
@@ -57,7 +78,7 @@ modules:
         sha256: 37715ef44a75d4ae7cf2fc9a379805837a29b44f1eeacfab853a0b4acd73157a
         size: 108232300
       - type: file
-        path: fixup-exports.py
+        path: metainfo.patch
     modules:
       # Required by post-installation script only
       - name: xdg-utils
