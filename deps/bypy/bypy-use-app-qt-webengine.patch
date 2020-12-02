@@ -1,0 +1,37 @@
+diff --git a/bypy/pkgs/pyqt.py b/bypy/pkgs/pyqt.py
+index de80994..994327d 100644
+--- a/bypy/pkgs/pyqt.py
++++ b/bypy/pkgs/pyqt.py
+@@ -23,6 +23,13 @@ def run_sip_install(for_webengine=False):
+             '--qt-shared --confirm-license --no-designer-plugin'
+             ' --no-qml-plugin'.split()
+         )
++    else:
++        # WebEngine is not in same location as other Qt libraries in Flatpak
++        args += [
++        	'--qmake-setting', f'QMAKE_INCDIR+={PREFIX}/include/QtWebEngineCore',
++        	'--qmake-setting', f'QMAKE_INCDIR+={PREFIX}/include/QtWebEngine',
++        	'--qmake-setting', f'QMAKE_INCDIR+={PREFIX}/include/QtWebEngineWidgets'
++        ]
+     run(f'{PREFIX}/bin/sip-build', *args, library_path=True)
+     if iswindows:
+         # disable distinfo as installing it fails when using INSTALL_ROOT
+diff --git a/bypy/pkgs/pyqt_webengine.py b/bypy/pkgs/pyqt_webengine.py
+index a73ed0a..ccfd435 100644
+--- a/bypy/pkgs/pyqt_webengine.py
++++ b/bypy/pkgs/pyqt_webengine.py
+@@ -6,11 +6,12 @@ import os
+ 
+ from bypy.constants import PREFIX, PYTHON
+ from bypy.pkgs.pyqt import run_sip_install
+-from bypy.utils import run
++from bypy.utils import ModifiedEnv, run
+ 
+ 
+ def main(args):
+-    run_sip_install(for_webengine=True)
++    with ModifiedEnv(QMAKEPATH=f'{PREFIX}/lib'):  # QWebEngine is shipped in the base app rather then the Qt runtime
++        run_sip_install(for_webengine=True)
+ 
+ 
+ def post_install_check():

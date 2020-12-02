@@ -1,0 +1,43 @@
+diff --git a/bypy/constants.py b/bypy/constants.py
+index 1d92e4f..1a037e3 100644
+--- a/bypy/constants.py
++++ b/bypy/constants.py
+@@ -2,6 +2,7 @@
+ # vim:fileencoding=utf-8
+ # License: GPLv3 Copyright: 2019, Kovid Goyal <kovid at kovidgoyal.net>
+ 
++import errno
+ import os
+ import shutil
+ import sys
+@@ -128,6 +129,8 @@ else:
+                 f'-L{LIBDIR} -Wl,-rpath-link,{LIBDIR}'
+ 
+ 
++MKDTEMP_COUNTS = {}
++
+ def mkdtemp(prefix=''):
+     tdir = getattr(mkdtemp, 'tdir', None)
+     if tdir is None:
+@@ -138,7 +141,20 @@ def mkdtemp(prefix=''):
+         from .utils import ensure_clear_dir
+         ensure_clear_dir(tdir)
+         mkdtemp.tdir = tdir
+-    return tempfile.mkdtemp(prefix=prefix, dir=tdir)
++
++    # Like `mkdtemp` but creates directory names in a predicatable manner
++    MKDTEMP_COUNTS.setdefault(prefix, 0)
++    for _ in range(tempfile.TMP_MAX):
++        MKDTEMP_COUNTS[prefix] += 1
++        try:
++            path = os.path.join(tdir, prefix + str(MKDTEMP_COUNTS[prefix]))
++            os.makedirs(path, 0o700)
++        except FileExistsError:
++            continue
++        else:
++            return path
++    raise FileExistsError(errno.EEXIST,
++                          "No usable temporary file name found")
+ 
+ 
+ def build_dir(newval=None):

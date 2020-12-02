@@ -1,0 +1,13 @@
+diff --git a/bypy/pkgs/html5_parser.py b/bypy/pkgs/html5_parser.py
+index 5926a94..9afeeb3 100644
+--- a/bypy/pkgs/html5_parser.py
++++ b/bypy/pkgs/html5_parser.py
+@@ -12,7 +12,7 @@ from bypy.utils import ModifiedEnv, python_build, python_install
+ 
+ def main(args):
+     env = {}
+-    p = PREFIX.replace(os.sep, '/')
++    p = "/usr"
+     env = dict(
+         LIBXML_INCLUDE_DIRS='{0}/include{1}{0}/include/libxml2'.format(p, os.pathsep),
+         LIBXML_LIB_DIRS='{0}/lib'.format(p),

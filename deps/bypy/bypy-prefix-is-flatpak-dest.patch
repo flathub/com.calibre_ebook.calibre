@@ -1,0 +1,48 @@
+diff --git a/bypy/constants.py b/bypy/constants.py
+index 1d92e4f..df75d86 100644
+--- a/bypy/constants.py
++++ b/bypy/constants.py
+@@ -46,7 +46,7 @@ SOURCES = os.path.join(ROOT, 'sources')
+ PATCHES = os.path.join(BYPY, 'patches')
+ if iswindows:
+     os.environ['TMPDIR'] = os.environ['TEMP'] = os.environ['TMP'] = tempfile.tempdir = r'C:\t\t'  # noqa
+-PREFIX = os.path.join(SW, 'sw')
++PREFIX = os.environ['FLATPAK_DEST']
+ BIN = os.path.join(PREFIX, 'bin')
+ PYTHON = os.path.join(
+     PREFIX, 'private', 'python', 'python.exe') if iswindows else os.path.join(
+diff --git a/bypy/deps.py b/bypy/deps.py
+index cc20a61..46dc04b 100644
+--- a/bypy/deps.py
++++ b/bypy/deps.py
+@@ -91,7 +91,7 @@ def unbuilt(dep):
+ 
+ 
+ def install_packages(which_deps, dest_dir=PREFIX):
+-    ensure_clear_dir(dest_dir)
++    #ensure_clear_dir(dest_dir)
+     if not which_deps:
+         return
+     print(f'Installing {len(which_deps)} previously compiled packages:',
+@@ -155,4 +155,4 @@ def main(parsed_args):
+                 print('Remaining deps:', ', '.join(remaining))
+ 
+     # After a successful build, remove the unneeded sw dir
+-    rmtree(PREFIX)
++    #rmtree(PREFIX)
+diff --git a/bypy/utils.py b/bypy/utils.py
+index 7ce260e..d2620b1 100644
+--- a/bypy/utils.py
++++ b/bypy/utils.py
+@@ -205,10 +205,7 @@ def lcopy(src, dst, no_hardlinks=False):
+             os.symlink(linkto, dst)
+             return True
+         else:
+-            if no_hardlinks:
+-                shutil.copy(src, dst)
+-            else:
+-                os.link(src, dst)
++            shutil.copy(src, dst)
+             return False
+     except FileExistsError:
+         os.unlink(dst)

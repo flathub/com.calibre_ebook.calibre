@@ -1,0 +1,19 @@
+--- a/setup/build.py	2020-10-18 02:15:10.648593444 +0200
++++ b/setup/build.py	2020-10-18 02:10:40.396584203 +0200
+@@ -6,6 +6,7 @@
+ __docformat__ = 'restructuredtext en'
+ 
+ import textwrap, os, shlex, subprocess, glob, shutil, sys, json
++import distutils.sysconfig
+ from collections import namedtuple
+ 
+ from setup import Command, islinux, isbsd, isfreebsd, ismacos, ishaiku, SRC, iswindows
+@@ -516,7 +517,7 @@
+             cmd = [
+                 sys.executable, '-c',
+                 f'''import os; os.chdir({src_dir!r}); from sipbuild.tools.build import main; main();''',
+-                '--verbose', '--no-make', '--qmake', QMAKE
++                '--verbose', '--no-make', '--qmake', QMAKE, '--target', distutils.sysconfig.get_python_lib(prefix="/app")
+             ]
+         return cmd, sbf
+ 

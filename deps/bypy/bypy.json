@@ -1,0 +1,69 @@
+{
+	"name": "bypy",
+	"buildsystem": "simple",
+	"build-commands": [
+		"mkdir -p \"${FLATPAK_DEST}/lib/python3.8/site-packages\"",
+		"cp -avr bypy \"${FLATPAK_DEST}/lib/python3.8/site-packages\"",
+		"install -T __main__.py /app/bin/bypy"
+	],
+	"cleanup": ["*"],
+	"sources": [
+		{
+			"type": "git",
+			"path": "../bypy-generated/bypy",
+			"tag": "HEAD"
+		},
+		
+		{
+			"//": "Add bypy flag for preventing it from ever connecting to the network",
+			"path": "bypy-no-download-flag.patch",
+			"type": "patch"
+		},
+		
+		{
+			"//": "Build all packages at deterministic locations to make ccache more effective and possibly increase determinisim of the generated artifacts",
+			"path": "bypy-deterministic-tempdir.patch",
+			"type": "patch"
+		},
+		
+		{
+			"//": "Install all compiled artifacts into and look for compiled artifacts in ${FLATPAK_DEST} (/app)",
+			"path": "bypy-prefix-is-flatpak-dest.patch",
+			"type": "patch"
+		},
+		
+		{
+			"//": "OPTIONAL: Drop to a bash shell on build errors as FDO runtime doesn't ship zsh",
+			"path": "bypy-shell-is-bash.patch",
+			"type": "patch"
+		},
+		
+		{
+			"//": "Patches to force bypy to use the runtime provided version of some available packages",
+			"path": "bypy-use-runtime-python.patch",
+			"type": "patch"
+		},
+		{
+			"path": "bypy-use-runtime-libxml.patch",
+			"type": "patch"
+		},
+		{
+			"path": "bypy-use-runtime-qt.patch",
+			"type": "patch"
+		},
+		{
+			"path": "bypy-use-app-qt-webengine.patch",
+			"type": "patch"
+		},
+		
+		{
+			"//": "Workarounds for broken bypy package recipies (TODO: Figure out why this isn't an issue otherwise)",
+			"path": "bypy-unrar-no-parallel.patch",
+			"type": "patch"
+		},
+		{
+			"path": "bypy-python-set-prefix.patch",
+			"type": "patch"
+		}
+	]
+}

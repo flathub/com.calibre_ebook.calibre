@@ -1,42 +1,106 @@
 app-id: com.calibre_ebook.calibre
-runtime: org.freedesktop.Platform
-runtime-version: '20.08'
-sdk: org.freedesktop.Sdk
+runtime: org.kde.Platform
+runtime-version: '5.15'
+sdk: org.kde.Sdk
+base: io.qt.qtwebengine.BaseApp
+base-version: '5.15'
 command: calibre
 separate-locales: false
 finish-args:
   - --device=all
   - --filesystem=host
-  - --filesystem=xdg-config/kdeglobals:ro
   - --share=ipc
   - --share=network
   - --socket=x11
   - --socket=wayland
   - --filesystem=xdg-run/speech-dispatcher:ro
   - --system-talk-name=org.freedesktop.UDisks2
-  - --talk-name=com.canonical.AppMenu.Registrar
   - --talk-name=org.kde.StatusNotifierWatcher
   - --own-name=org.kde.StatusNotifierItem-2-1
-  - --env=KDE_FORK_SLAVES=1
+  - --env=QTWEBENGINEPROCESS_PATH=/app/bin/QtWebEngineProcess
+cleanup:
+  # Unneeded files from bypy-generated packages
+  - /lib/python*/site-packages/Crypto/SelfTest
+  - /lib/python*/site-packages/dateutil/zoneinfo  # Provided by runtime
+  - /lib/python*/site-packages/*-py*.dist-info
+  - /lib/python*/site-packages/*-py*.egg-info
+  - /lib/pkgconfig
+  - /lib/*.a
+
+  # Package: dbus-glib
+  - /libexec
+  - /etc
+
+  # Package: libmtp
+  - /udev
+
+  # Package: mozjpeg
+  - /private
+
+  # Package: PyQt5
+  #
+  # TODO: Investigate if just building less PyQt5 modules can be upstreamed
+  #       instead – they are a huge burden on build-time too
+  - /lib/python*/site-packages/PyQt5/bindings
+  - /lib/python*/site-packages/PyQt5/uic
+  - /lib/python*/site-packages/PyQt5/pylupdate.*.so
+  - /lib/python*/site-packages/PyQt5/pyrcc.*.so
+  - /lib/python*/site-packages/PyQt5/QtBluetooth.*.so
+  - /lib/python*/site-packages/PyQt5/QtDBus.*.so
+  - /lib/python*/site-packages/PyQt5/QtDesigner.*.so
+  - /lib/python*/site-packages/PyQt5/QtHelp.*.so
+  - /lib/python*/site-packages/PyQt5/QtLocation.*.so
+  - /lib/python*/site-packages/PyQt5/QtMultimedia.*.so
+  - /lib/python*/site-packages/PyQt5/QtMultimediaWidgets.*.so
+  - /lib/python*/site-packages/PyQt5/QtNetworkAuth.*.so
+  - /lib/python*/site-packages/PyQt5/QtNfc.*.so
+  - /lib/python*/site-packages/PyQt5/QtOpenGL.*.so
+  - /lib/python*/site-packages/PyQt5/QtPositioning.*.so
+  - /lib/python*/site-packages/PyQt5/QtQml.*.so
+  - /lib/python*/site-packages/PyQt5/QtQuick.*.so
+  - /lib/python*/site-packages/PyQt5/QtQuickWidgets.*.so
+  - /lib/python*/site-packages/PyQt5/QtSensors.*.so
+  - /lib/python*/site-packages/PyQt5/QtSerialPort.*.so
+  - /lib/python*/site-packages/PyQt5/QtSql.*.so
+  - /lib/python*/site-packages/PyQt5/QtTest.*.so
+  - /lib/python*/site-packages/PyQt5/QtTextToSpeech.*.so
+  - /lib/python*/site-packages/PyQt5/QtX11Extras.*.so
+  - /lib/python*/site-packages/PyQt5/QtXml.*.so
+  - /lib/python*/site-packages/PyQt5/QtXmlPatterns.*.so
+  - /lib/python*/site-packages/PyQt5/QtWebEngine.*.so
+  - /lib/python*/site-packages/PyQt5/QtWebSockets.*.so
+
+  # Package: PyQt5-webengine
+  - /lib/qml
+
+  # Left-over Python bytecode files from build-time only modules
+  #
+  #XXX: A much better solution would be to have to bytecode be generated immediately
+  #     in each build step so that it is available on Calibre startup and can be
+  #     automatically tracked and removed by Flatpak Builder when doing cleanup.
+  - /lib/python*/site-packages/bypy
+  - /lib/python*/site-packages/sipbuild
+  - /lib/python*/site-packages/packaging
+  - /lib/python*/site-packages/pyqtbuild
+  - /lib/python*/site-packages/__pycache__  # pyparsing.py
+cleanup-commands:
+  - /app/cleanup-BaseApp.sh
 modules:
   - name: calibre
     buildsystem: simple
     build-options:
       env:
+        - PODOFO_INC_DIR=/app/include/podofo
+        - PODOFO_LIB_DIR=/app/lib
         - XDG_UTILS_INSTALL_MODE=system
     build-commands:
-      # Extract Calibre archive to target location
-      - mkdir -p "${FLATPAK_DEST}/lib/calibre"
-      - tar -xvf calibre*.txz -C "${FLATPAK_DEST}/lib/calibre"
-      - rm -f calibre*.txz
-
       # Ensure that Calibre install script and the `xdg-utils` it uses will not
       # report errors because they are unable to find any suitable destination
       # directory to place their files into
       - mkdir -p "${FLATPAK_DEST}/bin" "${FLATPAK_DEST}"/share/{applications,desktop-directories,icons/hicolor,mime/packages}
 
-      # Run Calibre system integration scripts
-      - /app/lib/calibre/calibre_postinstall --root="${FLATPAK_DEST}"
+      # Compile and install Calibre with all its included binary components (uses xdg-utils)
+      - python3 ./setup.py install --prefix="${FLATPAK_DEST}"
 
       # post-install for ebook-edit
       - mv $FLATPAK_DEST/share/applications/{calibre-ebook-edit,$FLATPAK_ID.ebook-edit}.desktop
@@ -70,19 +134,26 @@ modules:
     cleanup:
       - /bin/calibre-uninstall
       - /share/applications/mimeinfo.cache
+      - /share/calibre/fonts/liberation  # Included in runtime image
     sources:
-      - type: file
+      - type: archive
         only-arches:
           - x86_64
-        url: https://download.calibre-ebook.com/5.6.0/calibre-5.6.0-x86_64.txz
+        url: https://download.calibre-ebook.com/5.6.0/calibre-5.6.0.tar.xz
         x-checker-data:
           type: html
           url: https://calibre-ebook.com/download_linux
           version-pattern: The latest release of calibre is ((?:\d+\.)?(?:\d+\.)?\d+)
-          url-template: https://download.calibre-ebook.com/$version/calibre-$version-x86_64.txz
-        sha256: 37715ef44a75d4ae7cf2fc9a379805837a29b44f1eeacfab853a0b4acd73157a
-        size: 108232300
+          url-template: https://download.calibre-ebook.com/$version/calibre-$version.tar.xz
+        sha256: 484a2e120fdbcff6c544d4c216afef0ff784c7665d3fd44d98acb0420d8f5e55
+        size: 36653328
+      - type: patch
+        path: calibre-override-sip-target.patch
     modules:
+      # Used to build all upstream managed dependencies
+      - "deps/bypy/bypy.json"
+      # Main dependency list
+      - "deps/bypy-generated/flatpak-modules.json"
       # Required by post-installation script only
       - name: xdg-utils
         buildsystem: autotools
