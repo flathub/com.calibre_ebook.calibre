@@ -104,7 +104,7 @@ modules:
           - name: links
             buildsystem: autotools
             post-install:
-              - ln -s links /app/bin/elinks
+              - ln -s links "${FLATPAK_DEST}/bin/elinks"
             cleanup: ["*"]
             sources:
               - type: archive
