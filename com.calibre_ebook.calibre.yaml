@@ -40,7 +40,7 @@ modules:
       - mkdir -p "${FLATPAK_DEST}/bin" "${FLATPAK_DEST}"/share/{applications,desktop-directories,icons/hicolor,mime/packages}
 
       # Run Calibre system integration scripts
-      - /app/lib/calibre/calibre_postinstall --root="${FLATPAK_DEST}"
+      - $FLATPAK_DEST/lib/calibre/calibre_postinstall --root=$FLATPAK_DEST
 
       # post-install for ebook-edit
       - mv $FLATPAK_DEST/share/applications/{calibre-ebook-edit,$FLATPAK_ID.ebook-edit}.desktop
