@@ -30,6 +30,10 @@ modules:
       - tar -xvf calibre*.txz -C "${FLATPAK_DEST}/lib/calibre"
       - rm -f calibre*.txz
 
+      # Reuse liberation font files from runtime (saves 4MB)
+      - rm "${FLATPAK_DEST}/lib/calibre/resources/fonts/liberation"/*.ttf
+      - ln -s /usr/share/fonts/liberation-fonts/*.ttf "${FLATPAK_DEST}/lib/calibre/resources/fonts/liberation/"
+
       # Ensure that Calibre install script and the `xdg-utils` it uses will not
       # report errors because they are unable to find any suitable destination
       # directory to place their files into
