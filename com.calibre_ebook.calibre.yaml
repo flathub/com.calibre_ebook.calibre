@@ -44,13 +44,15 @@ modules:
 
       # post-install for ebook-edit
       - mv $FLATPAK_DEST/share/applications/{calibre-ebook-edit,$FLATPAK_ID.ebook-edit}.desktop
-      - for p in 16 32 48 64 128 256; do mv $FLATPAK_DEST/share/icons/hicolor/${p}x${p}/apps/{calibre-ebook-edit,$FLATPAK_ID.ebook-edit}.png; done
+      - for p in 16 32 48 64 128 256; do mv $FLATPAK_DEST/share/icons/hicolor/${p}x${p}/apps/{calibre-ebook-edit,$FLATPAK_ID.ebook-edit}.png;
+        done
       - desktop-file-edit --set-key Icon --set-value $FLATPAK_ID.ebook-edit $FLATPAK_DEST/share/applications/$FLATPAK_ID.ebook-edit.desktop
 
       # post-install for ebook-viewer
       # NOTE: Upstream desktop and icon basenames do not match
       - mv $FLATPAK_DEST/share/applications/{calibre-ebook-viewer,$FLATPAK_ID.ebook-viewer}.desktop
-      - for p in 16 32 48 64 128 256; do mv $FLATPAK_DEST/share/icons/hicolor/${p}x${p}/apps/{calibre-viewer,$FLATPAK_ID.ebook-viewer}.png; done
+      - for p in 16 32 48 64 128 256; do mv $FLATPAK_DEST/share/icons/hicolor/${p}x${p}/apps/{calibre-viewer,$FLATPAK_ID.ebook-viewer}.png;
+        done
       - desktop-file-edit --set-key Icon --set-value $FLATPAK_ID.ebook-viewer $FLATPAK_DEST/share/applications/$FLATPAK_ID.ebook-viewer.desktop
 
       # post-install for lrfviewer
@@ -60,14 +62,18 @@ modules:
 
       # post-install for calibre
       - mv $FLATPAK_DEST/share/applications/{calibre-gui,$FLATPAK_ID}.desktop
-      - for p in 16 32 48 64 128 256; do mv $FLATPAK_DEST/share/icons/hicolor/${p}x${p}/apps/{calibre-gui,$FLATPAK_ID}.png; done
+      - for p in 16 32 48 64 128 256; do mv $FLATPAK_DEST/share/icons/hicolor/${p}x${p}/apps/{calibre-gui,$FLATPAK_ID}.png;
+        done
       - desktop-file-edit --set-key Icon --set-value $FLATPAK_ID $FLATPAK_DEST/share/applications/$FLATPAK_ID.desktop
 
       # post-install for metainfo
       - mv $FLATPAK_DEST/share/metainfo/{calibre-gui,$FLATPAK_ID}.metainfo.xml
-      - appstream-util modify $FLATPAK_DEST/share/metainfo/$FLATPAK_ID.metainfo.xml id $FLATPAK_ID
-      - appstream-util modify $FLATPAK_DEST/share/metainfo/$FLATPAK_ID.metainfo.xml launchable $FLATPAK_ID.desktop
-      - appstream-util add-provide $FLATPAK_DEST/share/metainfo/${FLATPAK_ID}.metainfo.xml id calibre-gui.desktop
+      - appstream-util modify $FLATPAK_DEST/share/metainfo/$FLATPAK_ID.metainfo.xml
+        id $FLATPAK_ID
+      - appstream-util modify $FLATPAK_DEST/share/metainfo/$FLATPAK_ID.metainfo.xml
+        launchable $FLATPAK_ID.desktop
+      - appstream-util add-provide $FLATPAK_DEST/share/metainfo/${FLATPAK_ID}.metainfo.xml
+        id calibre-gui.desktop
 
       # post-install for MIME types
       - mv $FLATPAK_DEST/share/mime/packages/{calibre-mimetypes,$FLATPAK_ID}.xml
@@ -78,19 +84,19 @@ modules:
       - type: file
         only-arches:
           - x86_64
-        url: https://download.calibre-ebook.com/5.6.0/calibre-5.6.0-x86_64.txz
+        url: https://download.calibre-ebook.com/5.7.0/calibre-5.7.0-x86_64.txz
         x-checker-data:
           type: html
           url: https://calibre-ebook.com/download_linux
           version-pattern: The latest release of calibre is ((?:\d+\.)?(?:\d+\.)?\d+)
           url-template: https://download.calibre-ebook.com/$version/calibre-$version-x86_64.txz
-        sha256: 37715ef44a75d4ae7cf2fc9a379805837a29b44f1eeacfab853a0b4acd73157a
-        size: 108232300
+        sha256: 189ab55679ef7227b822fce330fedecedb2fc2f830f14f385bc9d75fe149e036
+        size: 108297324
     modules:
       # Required by post-installation script only
       - name: xdg-utils
         buildsystem: autotools
-        cleanup: ["*"]
+        cleanup: ['*']
         sources:
           - type: archive
             url: https://portland.freedesktop.org/download/xdg-utils-1.1.3.tar.gz
@@ -105,7 +111,7 @@ modules:
             buildsystem: autotools
             post-install:
               - ln -s links "${FLATPAK_DEST}/bin/elinks"
-            cleanup: ["*"]
+            cleanup: ['*']
             sources:
               - type: archive
                 url: http://links.twibright.com/download/links-2.21.tar.bz2
@@ -113,7 +119,7 @@ modules:
           # Required by xdg-util's build system
           - name: xmlto
             buildsystem: autotools
-            cleanup: ["*"]
+            cleanup: ['*']
             sources:
               - type: archive
                 url: https://releases.pagure.org/xmlto/xmlto-0.0.28.tar.bz2
