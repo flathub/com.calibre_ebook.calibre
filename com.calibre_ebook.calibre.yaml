@@ -18,6 +18,7 @@ finish-args:
   - --talk-name=org.kde.StatusNotifierWatcher
   - --own-name=org.kde.StatusNotifierItem-2-1
   - --env=KDE_FORK_SLAVES=1
+  - --env=SSL_CERT_DIR=/etc/ssl/certs
 modules:
   - name: calibre
     buildsystem: simple
