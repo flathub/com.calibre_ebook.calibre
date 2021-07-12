@@ -20,6 +20,7 @@ finish-args:
   - --own-name=org.kde.StatusNotifierItem-2-1
   - --env=KDE_FORK_SLAVES=1
   - --env=SSL_CERT_DIR=/etc/ssl/certs
+  - --env=CALIBRE_TEMP_DIR=/run/user/1000/app/com.calibre_ebook.calibre
 modules:
   - name: calibre
     buildsystem: simple
