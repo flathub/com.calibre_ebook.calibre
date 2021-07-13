@@ -20,7 +20,6 @@ finish-args:
   - --own-name=org.kde.StatusNotifierItem-2-1
   - --env=KDE_FORK_SLAVES=1
   - --env=SSL_CERT_DIR=/etc/ssl/certs
-  - --env=CALIBRE_TEMP_DIR=/run/user/1000/app/com.calibre_ebook.calibre
 modules:
   - name: calibre
     buildsystem: simple
@@ -94,6 +93,15 @@ modules:
           version-pattern: The latest release of calibre is ((?:\d+\.)?(?:\d+\.)?\d+)
           url-template: https://download.calibre-ebook.com/$version/calibre-$version-x86_64.txz
         sha256: f4cd41d01a434d61572dc49fbb52949b97c8ebc4656445a4a90bcb84032f7614
+        post-install:
+          - mv /app/bin/calibre /app/bin/calibre-bin
+          - install -Dm755 ../calibre-wrapper /app/bin/calibre
+      - type: script
+        dest-filename: calibre-wrapper
+        commands:
+          - 'export CALIBRE_TEMP_DIR="$XDG_RUNTIME_DIR/app/$FLATPAK_ID"'
+          - 'exec /app/bin/calibre-bin "$@"'
+
     modules:
       # Required by post-installation script only
       - name: xdg-utils
