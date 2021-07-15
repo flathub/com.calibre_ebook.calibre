@@ -82,6 +82,9 @@ modules:
     cleanup:
       - /bin/calibre-uninstall
       - /share/applications/mimeinfo.cache
+    post-install:
+      - mv /app/bin/calibre /app/bin/calibre-bin
+      - install -Dm755 ../calibre-wrapper /app/bin/calibre
     sources:
       - type: file
         only-arches:
@@ -93,9 +96,6 @@ modules:
           version-pattern: The latest release of calibre is ((?:\d+\.)?(?:\d+\.)?\d+)
           url-template: https://download.calibre-ebook.com/$version/calibre-$version-x86_64.txz
         sha256: f4cd41d01a434d61572dc49fbb52949b97c8ebc4656445a4a90bcb84032f7614
-        post-install:
-          - mv /app/bin/calibre /app/bin/calibre-bin
-          - install -Dm755 ../calibre-wrapper /app/bin/calibre
       - type: script
         dest-filename: calibre-wrapper
         commands:
