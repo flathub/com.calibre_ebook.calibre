@@ -84,7 +84,7 @@ modules:
       - /share/applications/mimeinfo.cache
     post-install:
       - mv /app/bin/calibre /app/bin/calibre-bin
-      - install -Dm755 ../calibre-wrapper /app/bin/calibre
+      - install -Dm755 calibre-wrapper /app/bin/calibre
     sources:
       - type: file
         only-arches:
