@@ -86,13 +86,13 @@ modules:
       - type: file
         only-arches:
           - x86_64
-        url: https://download.calibre-ebook.com/5.23.0/calibre-5.23.0-x86_64.txz
+        url: https://download.calibre-ebook.com/5.24.0/calibre-5.24.0-x86_64.txz
         x-checker-data:
           type: html
           url: https://calibre-ebook.com/download_linux
           version-pattern: The latest release of calibre is ((?:\d+\.)?(?:\d+\.)?\d+)
           url-template: https://download.calibre-ebook.com/$version/calibre-$version-x86_64.txz
-        sha256: f4cd41d01a434d61572dc49fbb52949b97c8ebc4656445a4a90bcb84032f7614
+        sha256: 5b5fcb31b4702ae3ec754c12fc575f1cd346799fc70b35e0e85c1dad19ea9d1a
     modules:
       # Required by post-installation script only
       - name: xdg-utils
