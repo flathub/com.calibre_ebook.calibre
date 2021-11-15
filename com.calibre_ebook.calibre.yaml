@@ -14,6 +14,7 @@ finish-args:
   - --socket=x11
   - --socket=wayland
   - --filesystem=xdg-run/speech-dispatcher:ro
+  - --filesystem=xdg-data/Trash
   - --system-talk-name=org.freedesktop.UDisks2
   - --talk-name=com.canonical.AppMenu.Registrar
   - --talk-name=org.kde.StatusNotifierWatcher
