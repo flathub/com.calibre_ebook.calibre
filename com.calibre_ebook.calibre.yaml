@@ -1,17 +1,34 @@
+# TODO: evalute parallelizing compilation of python modules with long build time
+#         - python setup.py build --parallel=${FLATPAK_BUILDER_N_JOBS}
+#         - pip install --install-option=--jobs=${FLATPAK_BUILDER_N_JOBS}
+#         - MAKEARGS=${FLATPAK_BUILDER_N_JOBS}
+#       modules: apsw,brotli,brotlicffi,cchardet,cffi,Cryptodome,html5_parser,lxml,msgpack,pillow,pyppmd,pyzstd,regex
+# TODO: fix mime icon exports
+# TODO: add support for running tests
 app-id: com.calibre_ebook.calibre
-runtime: org.freedesktop.Platform
-runtime-version: '21.08'
-sdk: org.freedesktop.Sdk
+runtime: org.kde.Platform
+runtime-version: 5.15-21.08
+sdk: org.kde.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.node18
+  - org.freedesktop.Sdk.Extension.openjdk
+base: com.riverbankcomputing.PyQt.BaseApp
+base-version: 5.15-21.08
 command: calibre
-separate-locales: false
+build-options:
+  append-path: /usr/lib/sdk/node18/bin:/usr/lib/sdk/openjdk/bin
+  env:
+    JAVA_HOME: /usr/lib/sdk/openjdk/jvm/openjdk
+    npm_config_nodedir: /usr/lib/sdk/node18
 finish-args:
   - --device=all
   - --device=dri
+  - --env=QTWEBENGINEPROCESS_PATH=/app/bin/QtWebEngineProcess
   - --filesystem=host
   - --filesystem=xdg-config/kdeglobals:ro
   - --share=ipc
   - --share=network
-  - --socket=x11
+  - --socket=fallback-x11
   - --socket=wayland
   - --filesystem=xdg-run/speech-dispatcher:ro
   - --filesystem=xdg-data/Trash
@@ -21,30 +38,1043 @@ finish-args:
   - --own-name=org.kde.StatusNotifierItem-2-1
   - --env=KDE_FORK_SLAVES=1
   - --env=SSL_CERT_DIR=/etc/ssl/certs
+cleanup-commands:
+  - /app/cleanup-BaseApp.sh
 modules:
+  - name: xdg-utils  # required by calibre's post-install step (desktop integration)
+    sources:
+      - type: archive
+        url: https://portland.freedesktop.org/download/xdg-utils-1.1.3.tar.gz
+        sha256: d798b08af8a8e2063ddde6c9fa3398ca81484f27dec642c5627ffcaa0d4051d9
+        x-checker-data:
+          type: anitya
+          project-id: 5176
+          stable-only: true
+          url-template: https://portland.freedesktop.org/download/xdg-utils-$version.tar.gz
+    cleanup:
+      - '*'
+    modules:
+      - name: lynx
+        sources:
+          - type: archive
+            url: https://invisible-mirror.net/archives/lynx/tarballs/lynx2.8.9rel.1.tar.gz
+            sha256: a46e4167b8f02c066d2fe2eafcc5603367be0e3fe2e59e9fc4eb016f306afc8e
+            x-checker-data:
+              type: html
+              url: https://lynx.invisible-island.net
+              # TODO: improve matching pattern
+              version-pattern: lynx([\d.]+)
+              url-template: https://invisible-mirror.net/archives/lynx/tarballs/lynx${version}rel.1.tar.gz
+        cleanup:
+          - '*'
+      - name: xmlto
+        build-options:
+          env:
+            LINKS: /app/bin/links
+        sources:
+          - type: archive
+            url: https://releases.pagure.org/xmlto/xmlto-0.0.28.tar.bz2
+            sha256: 1130df3a7957eb9f6f0d29e4aa1c75732a7dfb6d639be013859b5c7ec5421276
+            x-checker-data:
+              type: anitya
+              project-id: 13307
+              stable-only: true
+              url-template: https://releases.pagure.org/xmlto/xmlto-$version.tar.bz2
+        cleanup:
+          - '*'
+
   - name: calibre
     buildsystem: simple
     build-options:
       env:
-        - XDG_UTILS_INSTALL_MODE=system
+        LANG: en_US.UTF-8
+        PODOFO_INC_DIR: /app/include/podofo
+        PODOFO_LIB_DIR: /app/lib/libpodofo.so
+        QTWEBENGINEPROCESS_PATH: /app/bin/QtWebEngineProcess
+        XDG_UTILS_INSTALL_MODE: system
     build-commands:
-      # Extract Calibre archive to target location
-      - mkdir -p "${FLATPAK_DEST}/lib/calibre"
-      - tar -xvf calibre*.txz -C "${FLATPAK_DEST}/lib/calibre"
-      - rm -f calibre*.txz
+      - install -dm755 ${FLATPAK_DEST}/share/{applications,desktop-directories,icons/hicolor,mime/packages}
+      - python setup.py build
+      - python setup.py gui
+      - python setup.py liberation_fonts --path-to-liberation_fonts /usr/share/fonts/liberation-fonts
+        --system-liberation_fonts
+      - python setup.py mathjax --path-to-mathjax ${FLATPAK_DEST}/share/mathjax --system-mathjax
+      - python setup.py rapydscript
+      - python setup.py install --prefix=${FLATPAK_DEST} --system-plugins-location=${FLATPAK_DEST}/share/calibre/system-plugins
+      - python -m compileall ${FLATPAK_DEST}/lib/calibre
+    sources:
+      - type: archive
+        url: https://download.calibre-ebook.com/5.44.0/calibre-5.44.0.tar.xz
+        sha256: 6ffaa3eafd36a24355e5957f0f838db6db6d3456cfa17cb4d139fd94ebaf88ec
+        x-checker-data:
+          is-main-source: true
+          type: html
+          url: https://calibre-ebook.com/download_linux
+          version-pattern: The latest release of calibre is ((?:\d+\.)?(?:\d+\.)?\d+)
+          url-template: https://download.calibre-ebook.com/$version/calibre-$version.tar.xz
+      - type: patch
+        path: calibre-sipbuild.patch
+    cleanup:
+      - /bin/calibre-uninstall
+      - /share/applications/mimeinfo.cache
+      - /share/bash-completion
+      - /share/calibre/rapydscript
+      - /share/desktop-directories
+      - /share/metainfo
 
-      # Reuse liberation font files from runtime (saves 4MB)
-      - rm "${FLATPAK_DEST}/lib/calibre/resources/fonts/liberation"/*.ttf
-      - ln -s /usr/share/fonts/liberation-fonts/*.ttf "${FLATPAK_DEST}/lib/calibre/resources/fonts/liberation/"
+    modules:
+      - name: jxrlib
+        buildsystem: cmake
+        sources:
+          - type: archive
+            url: https://github.com/glencoesoftware/jxrlib/archive/v0.2.4/jxrlib-0.2.4.tar.gz
+            sha256: 324af02e341bcb9e3b31a6d6892f47231f95f9f87ab4fe7645be619dcaf965a7
+            x-checker-data:
+              type: anitya
+              project-id: 260063
+              stable-only: true
+              url-template: https://github.com/glencoesoftware/jxrlib/archive/v$version/jxrlib-$version.tar.gz
+          - type: file
+            path: jxrlib-CMakeLists.txt
+            dest-filename: CMakeLists.txt
+        cleanup:
+          - /bin/JxrEncApp
 
-      # Ensure that Calibre install script and the `xdg-utils` it uses will not
-      # report errors because they are unable to find any suitable destination
-      # directory to place their files into
-      - mkdir -p "${FLATPAK_DEST}/bin" "${FLATPAK_DEST}"/share/{applications,desktop-directories,icons/hicolor,mime/packages}
+      - name: libmtp
+        config-opts:
+          - --with-udev=${FLATPAK_DEST}/lib/udev
+          - --disable-doxygen
+          - --disable-static
+        sources:
+          - type: archive
+            url: https://downloads.sourceforge.net/libmtp/libmtp-1.1.19.tar.gz
+            sha256: deb4af6f63f5e71215cfa7fb961795262920b4ec6cb4b627f55b30b18aa33228
+            x-checker-data:
+              type: anitya
+              project-id: 10017
+              stable-only: true
+              url-template: https://downloads.sourceforge.net/libmtp/libmtp-$version.tar.gz
+        cleanup:
+          - /bin
+          - /lib/udev
+        modules:
+          - shared-modules/libusb/libusb.json
 
-      # Run Calibre system integration scripts
-      - $FLATPAK_DEST/lib/calibre/calibre_postinstall --root=$FLATPAK_DEST
+      - name: libstemmer
+        no-autogen: true
+        no-make-install: true
+        build-commands:
+          - install -Dm644 include/libstemmer.h -t ${FLATPAK_DEST}/include/
+          - install -Dm644 libstemmer.so.0 ${FLATPAK_DEST}/lib/libstemmer.so
+        sources:
+          - type: archive
+            url: https://github.com/snowballstem/snowball/archive/v2.2.0/snowball-2.2.0.tar.gz
+            sha256: 425cdb5fba13a01db59a1713780f0662e984204f402d3dae1525bda9e6d30f1a
+            x-checker-data:
+              type: anitya
+              project-id: 230535
+              stable-only: true
+              url-template: https://github.com/snowballstem/snowball/archive/v$version/snowball-$version.tar.gz
+          - type: patch
+            # https://github.com/archlinux/svntogit-packages/blob/packages/snowball/trunk/dynamiclib.diff
+            path: libstemmer-sharedlib.patch
 
+      - name: libwmf
+        config-opts:
+          - --disable-static
+        sources:
+          - type: archive
+            url: https://github.com/caolanm/libwmf/archive/b175ff18b5d3a7cec1cf5c14b71c7e9c08076405/libwmf-b175ff18b5d3a7cec1cf5c14b71c7e9c08076405.tar.gz
+            sha256: 4d734eadad4c85aa92880f5295acb1431a6864fa7a51c48d312988172cee69f4
+            x-checker-data:
+              type: anitya
+              project-id: 230209
+              stable-only: true
+              versions:
+                '>': 0.2.12
+              url-template: https://github.com/caolanm/libwmf/archive/v$version/libwmf-$version.tar.gz
+          - type: shell
+            # NOTE: remove after version update
+            commands:
+              - autoreconf -fiv
+        cleanup:
+          - /bin
+
+      - name: mathjax
+        buildsystem: simple
+        build-commands:
+          - install -dm755 ${FLATPAK_DEST}/share
+          - cp -r es5 ${FLATPAK_DEST}/share/mathjax
+        sources:
+          - type: archive
+            url: https://github.com/mathjax/MathJax/archive/3.2.2/mathjax-3.2.2.tar.gz
+            sha256: 4206b9645a97f431018d0b6c4021c98607d49ba4dc129f4f2ecce675e2fcba11
+            x-checker-data:
+              type: anitya
+              project-id: 1892
+              stable-only: true
+              url-template: https://github.com/mathjax/MathJax/archive/$version/mathjax-$version.tar.gz
+
+      - name: mtdev
+        config-opts:
+          - --disable-static
+        sources:
+          - type: archive
+            url: https://bitmath.org/code/mtdev/mtdev-1.1.6.tar.gz
+            sha256: 1325f389a2f25cd5f5a8ea4d29aad24aa7c3ec30401d679400dd79eb9c0a8dbb
+            x-checker-data:
+              type: anitya
+              project-id: 8868
+              stable-only: true
+              url-template: https://bitmath.org/code/mtdev/mtdev-$version.tar.gz
+          - type: shell
+            # NOTE: remove after version update
+            commands:
+              - autoreconf -fiv
+        cleanup:
+          - /bin
+
+      - name: optipng
+        config-opts:
+          - --with-system-libs
+          - --mandir=${FLATPAK_DEST}/share/man
+        sources:
+          - type: archive
+            url: https://downloads.sourceforge.net/sourceforge/optipng/optipng-0.7.7.tar.gz
+            sha256: 4f32f233cef870b3f95d3ad6428bfe4224ef34908f1b42b0badf858216654452
+            x-checker-data:
+              type: anitya
+              project-id: 2571
+              stable-only: true
+              url-template: https://downloads.sourceforge.net/sourceforge/optipng/optipng-$version.tar.gz
+        cleanup:
+          - /share/man
+
+      - name: podofo
+        buildsystem: cmake
+        config-opts:
+          - -DFREETYPE_INCLUDE_DIR=/usr/include/freetype2
+          - -DPODOFO_BUILD_SHARED=1
+          - -DPODOFO_HAVE_JPEG_LIB=1
+          - -DPODOFO_HAVE_PNG_LIB=1
+          - -DPODOFO_HAVE_TIFF_LIB=1
+        sources:
+          - type: archive
+            url: https://downloads.sourceforge.net/sourceforge/podofo/podofo-0.9.8.tar.gz
+            sha256: 5de607e15f192b8ad90738300759d88dea0f5ccdce3bf00048a0c932bc645154
+            x-checker-data:
+              type: anitya
+              project-id: 10527
+              stable-only: true
+              url-template: https://downloads.sourceforge.net/sourceforge/podofo/podofo-$version.tar.gz
+        cleanup:
+          - /bin
+          - /share/man
+
+      - name: poppler
+        buildsystem: cmake
+        config-opts:
+          - -DCMAKE_BUILD_TYPE=Release
+          - -DCMAKE_INSTALL_PREFIX:PATH=/app
+          - -DCMAKE_INSTALL_LIBDIR=/app/lib
+          - -DENABLE_UNSTABLE_API_ABI_HEADERS=ON
+          - -DENABLE_BOOST=OFF
+          - -DENABLE_UTILS=ON
+          - -DENABLE_CPP=OFF
+          - -DENABLE_GLIB=ON
+          - -DENABLE_GOBJECT_INTROSPECTION=OFF
+          - -DENABLE_QT5=OFF
+          - -DENABLE_QT6=OFF
+        sources:
+          - type: archive
+            url: https://poppler.freedesktop.org/poppler-22.06.0.tar.xz
+            sha256: a0f9aaa3918bad781039fc307a635652a14d1b391cd559b66edec4bedba3c5d7
+            x-checker-data:
+              type: anitya
+              project-id: 3686
+              stable-only: true
+              url-template: https://poppler.freedesktop.org/poppler-$version.tar.xz
+        cleanup:
+          - /bin/pdfattach
+          - /bin/pdfdetach
+          - /bin/pdffonts
+          - /bin/pdfimages
+          - /bin/pdfseparate
+          - /bin/pdfsig
+          - /bin/pdftocairo
+          - /bin/pdftops
+          - /bin/pdftotext
+          - /bin/pdfunite
+          - /share/man
+        modules:
+          - name: libjpeg-turbo
+            builddir: true
+            buildsystem: cmake
+            config-opts:
+              - -DCMAKE_BUILD_TYPE=Release
+              # CMAKE_INSTALL_LIBDIR somehow requires here full path, so set the default instead
+              - -DCMAKE_INSTALL_DEFAULT_LIBDIR=lib
+              - -DENABLE_STATIC=OFF
+              - -DWITH_JPEG8=ON
+              - -Wno-dev
+            sources:
+              - type: archive
+                url: https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-2.1.3.tar.gz
+                sha256: 467b310903832b033fe56cd37720d1b73a6a3bd0171dbf6ff0b620385f4f76d0
+                x-checker-data:
+                  type: anitya
+                  project-id: 1648
+                  stable-only: true
+                  url-template: https://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-$version.tar.gz
+            cleanup:
+              - /bin/djpeg
+              - /bin/rdjpgcom
+              - /bin/tjbench
+              - /bin/wrjpgcom
+              - /share/doc
+              - /share/man
+
+      - name: python-apsw
+        buildsystem: simple
+        build-commands:
+          # TODO: drop parallel option if it does nothing
+          - python setup.py build --enable=load_extension --parallel=${FLATPAK_BUILDER_N_JOBS}
+          - python setup.py install --skip-build --prefix=/app --root=/ --optimize=1
+        post-install:
+          # run tests as calibre doesn't test if apsw import is broken and can possibly overwrite the library db
+          - gcc ${CFLAGS} ${CPPFLAGS} ${LDFLAGS} -fPIC -shared -o testextension.sqlext
+            src/testextension.c
+          - python setup.py test
+        sources:
+          - type: archive
+            url: https://github.com/rogerbinns/apsw/releases/download/3.36.0-r1/apsw-3.36.0-r1.zip
+            sha256: 17355c39a8cdb9b9cd75b76d883b624c0dd05f80a6677c693b67c343c2381871
+            x-checker-data:
+              # TODO: switch to json checker
+              type: html
+              url: https://github.com/rogerbinns/apsw/tags.atom
+              # NOTE: workaround for missing versions support, see https://github.com/flathub/flatpak-external-data-checker/issues/309
+              version-pattern: <title>(3.36[\d.]*)-r\d</title>
+             #version-pattern: <title>([\d.]+)-r\d</title>
+              # NOTE: version must match runtime's libsqlite3.so
+             #versions:
+             #  '<': 3.38.0
+              url-template: https://github.com/rogerbinns/apsw/releases/download/${version}-r1/apsw-${version}-r1.zip
+
+      - name: python-beautifulsoup4
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
+            --prefix=${FLATPAK_DEST} "beautifulsoup4" --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/16/e3/4ad79882b92617e3a4a0df1960d6bce08edfb637737ac5c3f3ba29022e25/soupsieve-2.3.2.post1-py3-none-any.whl
+            sha256: 3b2503d3c7084a42b1ebd08116e5f81aadfaea95863628c80a3b774a11b7c759
+            x-checker-data:
+              type: pypi
+              name: soupsieve
+              packagetype: bdist_wheel
+          - type: file
+            url: https://files.pythonhosted.org/packages/9c/d8/909c4089dbe4ade9f9705f143c9f13f065049a9d5e7d34c828aefdd0a97c/beautifulsoup4-4.11.1-py3-none-any.whl
+            sha256: 58d5c3d29f5a36ffeb94f02f0d786cd53014cf9b3b3951d42e0080d8a9498d30
+            x-checker-data:
+              type: pypi
+              name: beautifulsoup4
+              packagetype: bdist_wheel
+
+      - name: python-cchardet
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} cchardet --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/a8/5d/090c9f0312b7988a9433246c9cf0b566b1ae1374368cfb8ac897218a4f65/cchardet-2.1.7.tar.gz
+            sha256: c428b6336545053c2589f6caf24ea32276c6664cb86db817e03a94c60afa0eaf
+            x-checker-data:
+              type: pypi
+              name: cchardet
+        cleanup:
+          - /bin
+
+      - name: python-css-parser
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} css-parser --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/ac/df/ed727cbb644de7d51f940bf669653347d5e68467e7a90d2c56bb86e489d9/css-parser-1.0.7.tar.gz
+            sha256: 25e096c63262dd249010ce36dab4cacd9595783ee09b5ed699ef12ab864ebbd1
+            x-checker-data:
+              type: pypi
+              name: css-parser
+
+      - name: python-cssselect
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} cssselect --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/70/54/37630f6eb2c214cdee2ae56b7287394c8aa2f3bafb8b4eb8c3791aae7a14/cssselect-1.1.0.tar.gz
+            sha256: f95f8dedd925fd8f54edb3d2dfb44c190d9d18512377d3c1e2388d16126879bc
+            x-checker-data:
+              type: pypi
+              name: cssselect
+
+      - name: python-dateutil
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} python-dateutil --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/4c/c4/13b4776ea2d76c115c1d1b84579f3764ee6d57204f6be27119f13a61d0a9/python-dateutil-2.8.2.tar.gz
+            sha256: 0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86
+            x-checker-data:
+              type: pypi
+              name: python-dateutil
+
+      - name: python-dnspython
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} dnspython --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/9b/ed/28fb14146c7033ba0e89decd92a4fa16b0b69b84471e2deab3cc4337cc35/dnspython-2.2.1-py3-none-any.whl
+            sha256: a851e51367fb93e9e1361732c1d60dab63eff98712e503ea7d92e6eccb109b4f
+            x-checker-data:
+              type: pypi
+              name: dnspython
+              packagetype: bdist_wheel
+
+      - name: python-feedparser
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} feedparser --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/63/9a/824e3c036dec4f0adb4e7c36dcf4cbffc9ee317a4985218cb1663c7ab4ad/feedparser-6.0.10.tar.gz
+            sha256: 27da485f4637ce7163cdeab13a80312b93b7d0c1b775bef4a47629a3110bca51
+            x-checker-data:
+              type: pypi
+              name: feedparser
+          - type: file
+            url: https://files.pythonhosted.org/packages/9e/bd/3704a8c3e0942d711c1299ebf7b9091930adae6675d7c8f476a7ce48653c/sgmllib3k-1.0.0.tar.gz
+            sha256: 7868fb1c8bfa764c1ac563d3cf369c381d1325d36124933a726f29fcdaa812e9
+            x-checker-data:
+              type: pypi
+              name: sgmllib3k
+
+      - name: python-html2text
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} html2text --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/6c/f9/033a17d8ea8181aee41f20c74c3b20f1ccbefbbc3f7cd24e3692de99fb25/html2text-2020.1.16.tar.gz
+            sha256: e296318e16b059ddb97f7a8a1d6a5c1d7af4544049a01e261731d2d5cc277bbb
+            x-checker-data:
+              type: pypi
+              name: html2text
+        cleanup:
+          - /bin
+
+      - name: python-html5-parser
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} html5-parser --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/e0/a1/f4e5d60919e8d1aeffc4aae4b41041b986081691a44798b4c77bf2585bf6/html5-parser-0.4.10.tar.gz
+            sha256: f9294418c0da95c2d5facc19d3dc32941093a6b8e3b3e4b36cc7b5a1697fbca4
+            x-checker-data:
+              type: pypi
+              name: html5-parser
+        modules:
+          - name: python-chardet
+            buildsystem: simple
+            build-commands:
+              - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+                --prefix=${FLATPAK_DEST} chardet --no-build-isolation
+            sources:
+              - type: file
+                url: https://files.pythonhosted.org/packages/31/a2/12c090713b3d0e141f367236d3a8bdc3e5fca0d83ff3647af4892c16c205/chardet-5.0.0.tar.gz
+                sha256: 0368df2bfd78b5fc20572bb4e9bb7fb53e2c094f60ae9993339e8671d0afb8aa
+                x-checker-data:
+                  type: pypi
+                  name: chardet
+            cleanup:
+              - /bin
+          - name: python-lxml
+            buildsystem: simple
+            build-commands:
+              # TODO: drop the multicore option if it does nothing
+              - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+                --prefix=${FLATPAK_DEST} lxml --no-build-isolation --install-option=--multicore=${FLATPAK_BUILDER_N_JOBS}
+            sources:
+              - type: file
+                url: https://files.pythonhosted.org/packages/aa/23/bda4e9881090f0f5e33e2efe89aacfa0668eb6e1ab2de28591e2912d78d4/lxml-4.9.0.tar.gz
+                sha256: 520461c36727268a989790aef08884347cd41f2d8ae855489ccf40b50321d8d7
+                x-checker-data:
+                  type: pypi
+                  name: lxml
+
+      - name: python-jeepney
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} jeepney --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/d6/f4/154cf374c2daf2020e05c3c6a03c91348d59b23c5366e968feb198306fdf/jeepney-0.8.0.tar.gz
+            sha256: 5efe48d255973902f6badc3ce55e2aa6c5c3b3bc642059ef3a91247bcfcc5806
+            x-checker-data:
+              type: pypi
+              name: jeepney
+
+      - name: python-markdown
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} markdown --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/d6/58/79df20de6e67a83f0d0bbfe6c19bb82adf68cdf362885257eb01099f930a/Markdown-3.3.7.tar.gz
+            sha256: cbb516f16218e643d8e0a95b309f77eb118cb138d39a4f27851e6a63581db874
+            x-checker-data:
+              type: pypi
+              name: markdown
+        modules:
+          # NOTE: remove when python updates to 3.10
+          - name: python-importlib-metadata
+            buildsystem: simple
+            build-commands:
+              - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+                --prefix=${FLATPAK_DEST} importlib-metadata --no-build-isolation
+            sources:
+              - type: file
+                url: https://files.pythonhosted.org/packages/35/a8/f2bd0d488c2bf932b4dda0fb91cbb687c0b1132b33130d1cfad4e2b4b963/importlib_metadata-4.11.4.tar.gz
+                sha256: 5d26852efe48c0a32b0509ffbc583fda1a2266545a78d104a6f4aff3db17d700
+                x-checker-data:
+                  type: pypi
+                  name: importlib-metadata
+              - type: file
+                url: https://files.pythonhosted.org/packages/cc/3c/3e8c69cd493297003da83f26ccf1faea5dd7da7892a0a7c965ac3bcba7bf/zipp-3.8.0.tar.gz
+                sha256: 56bf8aadb83c24db6c4b577e13de374ccfb67da2078beba1d037c17980bf43ad
+                x-checker-data:
+                  type: pypi
+                  name: zipp
+
+      - name: python-mechanize
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} mechanize --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/c2/19/00c387fc0c07f97affc78d92d4625d3845fa00f413efce1af44bc2bdda87/mechanize-0.4.8-py2.py3-none-any.whl
+            sha256: 961fd171b5eb37a7578fce62ba81ba85803dff3c5ba4ac24f6f569ae27198439
+            x-checker-data:
+              type: pypi
+              name: mechanize
+              packagetype: bdist_wheel
+        modules:
+          - name: python-html5lib
+            buildsystem: simple
+            build-commands:
+              - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+                --prefix=${FLATPAK_DEST} html5lib --no-build-isolation
+            sources:
+              - type: file
+                url: https://files.pythonhosted.org/packages/ac/b6/b55c3f49042f1df3dcd422b7f224f939892ee94f22abcf503a9b7339eaf2/html5lib-1.1.tar.gz
+                sha256: b2e5b40261e20f354d198eae92afc10d750afb487ed5e50f9c4eaf07c184146f
+                x-checker-data:
+                  type: pypi
+                  name: html5lib
+            modules:
+              - name: python-webencodings
+                buildsystem: simple
+                build-commands:
+                  - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+                    --prefix=${FLATPAK_DEST} webencodings --no-build-isolation
+                sources:
+                  - type: file
+                    url: https://files.pythonhosted.org/packages/0b/02/ae6ceac1baeda530866a85075641cec12989bd8d31af6d5ab4a3e8c92f47/webencodings-0.5.1.tar.gz
+                    sha256: b36a1c245f2d304965eb4e0a82848379241dc04b865afcc4aab16748587e1923
+                    x-checker-data:
+                      type: pypi
+                      name: webencodings
+
+      - name: python-msgpack
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} msgpack --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/22/44/0829b19ac243211d1d2bd759999aa92196c546518b0be91de9cacc98122a/msgpack-1.0.4.tar.gz
+            sha256: f5d869c18f030202eb412f08b28d2afeea553d6613aee89e200d7aca7ef01f5f
+            x-checker-data:
+              type: pypi
+              name: msgpack
+
+      - name: python-pillow
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} pillow --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/43/6e/59853546226ee6200f9ba6e574d11604b60ad0754d2cbd1c8f3246b70418/Pillow-9.1.1.tar.gz
+            sha256: 7502539939b53d7565f3d11d87c78e7ec900d3c72945d4ee0e2f250d598309a0
+            x-checker-data:
+              type: pypi
+              name: pillow
+        modules:
+          # NOTE: other possible depends
+          #       - libimagequant: higher quality quantization, doesn't seems to be used by calibre
+          #       - python-olefile: ms ole2 format
+          - name: lcms2
+            config-opts:
+              - --disable-static
+            sources:
+              - type: archive
+                url: https://github.com/mm2/Little-CMS/releases/download/lcms2.13.1/lcms2-2.13.1.tar.gz
+                sha256: d473e796e7b27c5af01bd6d1552d42b45b43457e7182ce9903f38bb748203b88
+                x-checker-data:
+                  type: anitya
+                  project-id: 9815
+                  stable-only: true
+                  url-template: https://github.com/mm2/Little-CMS/releases/download/lcms$version/lcms2-$version.tar.gz
+            cleanup:
+              - /bin
+              - /share/man
+          - name: libraqm
+            buildsystem: meson
+            sources:
+              - type: archive
+                url: https://github.com/HOST-Oman/libraqm/releases/download/v0.9.0/raqm-0.9.0.tar.xz
+                sha256: 9ed6fdf41da6391fc9bf7038662cbe412c330aa6eb22b19704af2258e448107c
+                x-checker-data:
+                  type: anitya
+                  project-id: 10672
+                  stable-only: true
+                  url-template: https://github.com/HOST-Oman/libraqm/releases/download/v$version/raqm-$version.tar.xz
+
+      - name: python-psutil
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} psutil --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/d6/de/0999ea2562b96d7165812606b18f7169307b60cd378bc29cf3673322c7e9/psutil-5.9.1.tar.gz
+            sha256: 57f1819b5d9e95cdfb0c881a8a5b7d542ed0b7c522d575706a80bedc848c8954
+            x-checker-data:
+              type: pypi
+              name: psutil
+
+      - name: python-py7zr
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} py7zr --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/34/45/8c0b9ff1324ae76f48ba778ded4474e9b3946e35d347dd7ab69b9e2d25f3/py7zr-0.18.9.tar.gz
+            sha256: ac2401d639fb9e5ee1bdb327d62d4fe6717712eec5778601e315bb2981b43441
+            x-checker-data:
+              type: pypi
+              name: py7zr
+          - type: file
+            url: https://files.pythonhosted.org/packages/50/f0/a7786212b5a4cb9ba05ae84a2bbd11d1d0279523aea0424b6d981d652a14/multivolumefile-0.2.3.tar.gz
+            sha256: a0648d0aafbc96e59198d5c17e9acad7eb531abea51035d08ce8060dcad709d6
+            x-checker-data:
+              type: pypi
+              name: multivolumefile
+          - type: file
+            url: https://files.pythonhosted.org/packages/4a/d4/c7e65408b4f3a3b5e99265f231a2d40f56d165396145da7fece412c9186f/pybcj-0.6.0.tar.gz
+            sha256: 9013522cc4a51a966bd7f430df9bf23693a5235bb36c7916cbe13f76aca62a0f
+            x-checker-data:
+              type: pypi
+              name: pybcj
+          - type: file
+            url: https://files.pythonhosted.org/packages/52/0d/6cc95a83f6961a1ca041798d222240890af79b381e97eda3b9b538dba16f/pycryptodomex-3.15.0.tar.gz
+            sha256: 7341f1bb2dadb0d1a0047f34c3a58208a92423cdbd3244d998e4b28df5eac0ed
+            x-checker-data:
+              type: pypi
+              name: pycryptodomex
+          - type: file
+            url: https://files.pythonhosted.org/packages/02/4b/ce088db11dba92148cde88676fc2f9b00d0c03e6acb96a3ae07ac5e6dc31/pyppmd-0.18.2.tar.gz
+            sha256: 732b28ea25afa41a282c986178b29e60ea5ec2e2b67f66997af943f73d4673e0
+            x-checker-data:
+              type: pypi
+              name: pyppmd
+          - type: file
+            url: https://files.pythonhosted.org/packages/d7/7b/ba3957277b8a06fe7dc94cfa2a097f1158556dbd815d192d46aacc93489e/pyzstd-0.15.2.tar.gz
+            sha256: eda9d2874a8f3823eea882125f304620f592693b3af0101c484bfc75726c8c59
+            x-checker-data:
+              type: pypi
+              name: pyzstd
+          - type: file
+            url: https://files.pythonhosted.org/packages/d5/78/dbc2a5eab57a01fedaf975f2c16f04e76f09336dbeadb9994258aa0a2b1a/texttable-1.6.4.tar.gz
+            sha256: 42ee7b9e15f7b225747c3fa08f43c5d6c83bc899f80ff9bae9319334824076e9
+            x-checker-data:
+              type: pypi
+              name: texttable
+          - type: file
+            url: https://files.pythonhosted.org/packages/03/1b/f397f821b48156ee94c5ca7ad82dc5cdb73cbcbc4377b9c1b21556f3ce8c/zipfile-deflate64-0.2.0.tar.gz
+            sha256: 875a3299de102edf1c17f8cafcc528b1ca80b62dc4814b9cb56867ec59fbfd18
+            x-checker-data:
+              type: pypi
+              name: zipfile-deflate64
+        cleanup:
+          - /bin
+        modules:
+          - name: python-brotlicffi
+            buildsystem: simple
+            build-commands:
+              - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+                --prefix=${FLATPAK_DEST} brotlicffi --no-build-isolation
+            sources:
+              - type: file
+                url: https://files.pythonhosted.org/packages/d3/d8/6acbb65e350213ad6bd96180593fad0a269a3baa845c67fed21adee3959d/brotlicffi-1.0.9.2.tar.gz
+                sha256: 0c248a68129d8fc6a217767406c731e498c3e19a7be05ea0a90c3c86637b7d96
+                x-checker-data:
+                  type: pypi
+                  name: brotlicffi
+            modules:
+              - name: brotli
+                buildsystem: cmake
+                build-options:
+                  cflags: -ffat-lto-objects
+                config-opts:
+                  - -DCMAKE_BUILD_TYPE=Release
+                  - -DBUILD_SHARED_LIBS=ON
+                  - -DBROTLI_DISABLE_TESTS=ON
+                post-install:
+                  - python setup.py build
+                  - python setup.py install --skip-build --prefix=/app --root=/ --optimize=1
+                sources:
+                  - type: archive
+                    url: https://github.com/google/brotli/archive/9801a2c5d6c67c467ffad676ac301379bb877fc3/brotli-9801a2c5d6c67c467ffad676ac301379bb877fc3.tar.gz
+                    sha256: 5761da8724ba9709a61f0697522419772d3a6c6236a30f5c8b62cdb60f3a7416
+                    x-checker-data:
+                      type: anitya
+                      project-id: 15235
+                      stable-only: true
+                      versions:
+                        '>': 1.0.9
+                      url-template: https://github.com/google/brotli/archive/v$version/brotli-$version.tar.gz
+                cleanup:
+                  - /bin
+                  - '*.a'
+              - name: python-cffi
+                buildsystem: simple
+                build-commands:
+                  - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+                    --prefix=${FLATPAK_DEST} cffi --no-build-isolation
+                sources:
+                  - type: file
+                    url: https://files.pythonhosted.org/packages/00/9e/92de7e1217ccc3d5f352ba21e52398372525765b2e0c4530e6eb2ba9282a/cffi-1.15.0.tar.gz
+                    sha256: 920f0d66a896c2d99f0adbb391f990a84091179542c205fa53ce5787aff87954
+                    x-checker-data:
+                      type: pypi
+                      name: cffi
+                  - type: file
+                    url: https://files.pythonhosted.org/packages/5e/0b/95d387f5f4433cb0f53ff7ad859bd2c6051051cebbb564f139a999ab46de/pycparser-2.21.tar.gz
+                    sha256: e644fdec12f7872f86c58ff790da456218b10f863970249516d60a5eaca77206
+                    x-checker-data:
+                      type: pypi
+                      name: pycparser
+
+      - name: python-pychm
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} pychm --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/89/3d/2272705cfac544288fdcda172e25f4399c57371780943ad2d1b4acb67092/pychm-0.8.6.tar.gz
+            sha256: 26606fec1e30cf7506c7afa943460c31e8dac87f35b7f178f437574d654cf672
+            x-checker-data:
+              type: pypi
+              name: pychm
+        modules:
+          - name: chmlib
+            config-opts:
+              - --disable-static
+            make-install-args:
+              - DESTDIR=${FLATPAK_BUILDER_BUILDDIR}/target
+            # make-install has unneeded file operations that seems to sometime break rofiles,
+            #  possibly only happens when using flatpaked flatpak-builder
+            post-install:
+              - cp -a target/app/* ${FLATPAK_DEST}/
+            sources:
+              - type: archive
+                url: http://www.jedrea.com/chmlib/chmlib-0.40.tar.bz2
+                sha256: 3449d64b0cf71578b2c7e3ddc048d4af3661f44a83941ea074a7813f3a59ffa3
+                x-checker-data:
+                  type: anitya
+                  project-id: 17678
+                  stable-only: true
+                  url-template: http://www.jedrea.com/chmlib/chmlib-$version.tar.bz2
+              - type: patch
+                # https://github.com/archlinuxarm/PKGBUILDs/tree/master/extra/chmlib
+                path: chmlib-aarch64.patch
+                only-arches:
+                  - aarch64
+              - type: shell
+                # NOTE: remove after version update
+                commands:
+                  - autoreconf -fiv
+
+      - name: python-pygments
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --ignore-installed --exists-action=i --no-index
+            --find-links=file://${PWD} --prefix=${FLATPAK_DEST} pygments --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/59/0f/eb10576eb73b5857bc22610cdfc59e424ced4004fe7132c8f2af2cc168d3/Pygments-2.12.0.tar.gz
+            sha256: 5eb116118f9612ff1ee89ac96437bb6b49e8f04d8a13b514ba26f620208e26eb
+            x-checker-data:
+              type: pypi
+              name: pygments
+        cleanup:
+          - /bin
+
+      - name: python-regex
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} regex --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/1a/6b/9b6b8284e88105acbcb39e71bd3bfcaffcd36c2601152ae23b00e6e04d91/regex-2022.6.2.tar.gz
+            sha256: f7b43acb2c46fb2cd506965b2d9cf4c5e64c9c612bac26c1187933c7296bf08c
+            x-checker-data:
+              type: pypi
+              name: regex
+
+      - name: python-unrardll
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} unrardll --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/ac/83/76ec4623be48c38c5c7db3dcaaf9f57139c75df327734c99085db8fc8ac8/unrardll-0.1.5.tar.gz
+            sha256: 8bebb480b96cd49d4290d814914f39cff75cf0fa0514c4790bb32b1757227c78
+            x-checker-data:
+              type: pypi
+              name: unrardll
+        modules:
+          - name: libunrar
+            build-options:
+              ldflags: -pthread
+            no-autogen: true
+            no-make-install: true
+            make-args:
+              - -j1
+              - lib
+            build-commands:
+              - install -Dm644 dll.hpp -t ${FLATPAK_DEST}/include/unrar/
+              - install -Dm644 libunrar.so -t ${FLATPAK_DEST}/lib/
+            sources:
+              - type: archive
+                url: https://www.rarlab.com/rar/unrarsrc-6.1.7.tar.gz
+                sha256: de75b6136958173fdfc530d38a0145b72342cf0d3842bf7bb120d336602d88ed
+                x-checker-data:
+                  type: anitya
+                  project-id: 13306
+                  stable-only: true
+                  url-template: https://www.rarlab.com/rar/unrarsrc-$version.tar.gz
+              - type: shell
+                commands:
+                  - sed -i '/^CXXFLAGS=/d;/^LDFLAGS=/d' makefile
+
+      - name: python-zeroconf
+        buildsystem: simple
+        build-commands:
+          - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+            --prefix=${FLATPAK_DEST} zeroconf --no-build-isolation
+        sources:
+          - type: file
+            url: https://files.pythonhosted.org/packages/5d/3f/25d4da0ada92e618a903d0a5d5e096d84b78050c5cb90ad8691a53e8692b/zeroconf-0.38.7.tar.gz
+            sha256: eaee2293e5f4e6d249f6155f9d3cca1668cb22b2545995ea72c6a03b4b7706d4
+            x-checker-data:
+              type: pypi
+              name: zeroconf
+        modules:
+          - name: python-ifaddr
+            buildsystem: simple
+            build-commands:
+              - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+                --prefix=${FLATPAK_DEST} ifaddr --no-build-isolation
+            sources:
+              - type: file
+                url: https://files.pythonhosted.org/packages/e8/ac/fb4c578f4a3256561548cd825646680edcadb9440f3f68add95ade1eb791/ifaddr-0.2.0.tar.gz
+                sha256: cc0cbfcaabf765d44595825fb96a99bb12c79716b73b44330ea38ee2b0c4aed4
+                x-checker-data:
+                  type: pypi
+                  name: ifaddr
+          - name: python-netifaces
+            buildsystem: simple
+            build-commands:
+              - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+                --prefix=${FLATPAK_DEST} netifaces --no-build-isolation
+            sources:
+              - type: file
+                url: https://files.pythonhosted.org/packages/a6/91/86a6eac449ddfae239e93ffc1918cf33fd9bab35c04d1e963b311e347a73/netifaces-0.11.0.tar.gz
+                sha256: 043a79146eb2907edf439899f262b3dfe41717d34124298ed281139a8b93ca32
+                x-checker-data:
+                  type: pypi
+                  name: netifaces
+
+      - name: rapydscript-ng
+        # TODO: would be better to have this in a separate manifest for update automation
+        # TODO: add disabled online installation of node modules and sources.json generation
+        buildsystem: simple
+        build-options:
+          env:
+            XDG_CACHE_HOME: /run/build/rapydscript-ng/flatpak-node/cache
+        build-commands:
+          - npm install --offline --cache=$FLATPAK_BUILDER_BUILDDIR/flatpak-node/npm-cache
+          - bin/rapydscript self --complete
+          - rm -rf release
+          - mv dev release
+          - install -dm755 ${FLATPAK_DEST}/lib/node_modules/rapydscript-ng
+          - |
+            shopt -s extglob
+            cp -r !(flatpak-node) ${FLATPAK_DEST}/lib/node_modules/rapydscript-ng/
+          - ln -s ../lib/node_modules/rapydscript-ng/rapydscript ${FLATPAK_DEST}/bin/rapydscript
+        sources:
+          - type: archive
+            url: https://github.com/kovidgoyal/rapydscript-ng/archive/v0.7.22/rapydscript-ng-0.7.22.tar.gz
+            sha256: 04bc3d1b59d24743bd54fde35cc02bb9bc0b0e5d053ef3072cd0682e02903bf7
+           #x-checker-data:
+           #  type: anitya
+           #  project-id: 260078
+           #  stable-only: true
+           #  url-template: https://github.com/kovidgoyal/rapydscript-ng/archive/v$version/rapydscript-ng-$version.tar.gz
+          - type: file
+            path: rapydscript-ng-package-lock.json
+            dest-filename: package-lock.json
+          - rapydscript-ng-sources.json  # flatpak-node-generator.py npm --xdg-layout -o rapydscript-ng-sources.json rapydscript-ng-package-lock.json
+        cleanup:
+          - '*'
+
+      - name: speech-dispatcher
+        config-opts:
+          - --disable-static
+          - --with-alsa=no
+          - --with-oss=no
+          - --with-pulse=no
+          - --with-baratinoo=no
+          - --with-flite=no
+          - --with-kali=no
+          - --with-voxin=no
+        sources:
+          - type: archive
+            url: https://github.com/brailcom/speechd/releases/download/0.11.1/speech-dispatcher-0.11.1.tar.gz
+            sha256: d1da12ed3dac84f13799b6a2ec39ba2d3ca21a8493f44dc1855bd0ba96c2ddc6
+            x-checker-data:
+              type: anitya
+              project-id: 13411
+              stable-only: true
+              url-template: https://github.com/brailcom/speechd/releases/download/$version/speech-dispatcher-$version.tar.gz
+        cleanup:
+          - /bin
+          - /etc
+          - /lib/speech-dispatcher
+          - /lib/libspeechd.so*
+          - /libexec
+          - /share/info
+          - /share/locale
+          - /share/man
+          - /share/runtime
+          - /share/sounds
+          - /share/speech-dispatcher
+        modules:
+          - name: dotconf
+            config-opts:
+              - --disable-static
+            sources:
+              - type: archive
+                url: https://github.com/williamh/dotconf/archive/v1.3/dotconf-1.3.tar.gz
+                sha256: 7f1ecf40de1ad002a065a321582ed34f8c14242309c3547ad59710ae3c805653
+                x-checker-data:
+                  type: anitya
+                  project-id: 13410
+                  stable-only: true
+                  url-template: https://github.com/williamh/dotconf/archive/v$version/dotconf-$version.tar.gz
+              - type: shell
+                commands:
+                  - autoreconf -fiv
+            cleanup:
+              - '*'
+          - name: python-pyxdg
+            buildsystem: simple
+            build-commands:
+              - pip3 install --verbose --exists-action=i --no-index --find-links=file://${PWD}
+                --prefix=${FLATPAK_DEST} pyxdg --no-build-isolation
+            sources:
+              - type: file
+                url: https://files.pythonhosted.org/packages/b0/25/7998cd2dec731acbd438fbf91bc619603fc5188de0a9a17699a781840452/pyxdg-0.28.tar.gz
+                sha256: 3267bb3074e934df202af2ee0868575484108581e6f3cb006af1da35395e88b4
+                x-checker-data:
+                  type: pypi
+                  name: pyxdg
+
+
+# - name: calibre-bin
+#   buildsystem: simple
+#   build-options:
+#     env:
+#       - XDG_UTILS_INSTALL_MODE=system
+#   build-commands:
+#     # Extract Calibre archive to target location
+#     - mkdir -p "${FLATPAK_DEST}/lib/calibre"
+#     - tar -xvf calibre*.txz -C "${FLATPAK_DEST}/lib/calibre"
+#     - rm -f calibre*.txz
+
+#     # Reuse liberation font files from runtime (saves 4MB)
+#     - rm "${FLATPAK_DEST}/lib/calibre/resources/fonts/liberation"/*.ttf
+#     - ln -s /usr/share/fonts/liberation-fonts/*.ttf "${FLATPAK_DEST}/lib/calibre/resources/fonts/liberation/"
+
+#     # Ensure that Calibre install script and the `xdg-utils` it uses will not
+#     # report errors because they are unable to find any suitable destination
+#     # directory to place their files into
+#     - mkdir -p "${FLATPAK_DEST}/bin" "${FLATPAK_DEST}"/share/{applications,desktop-directories,icons/hicolor,mime/packages}
+
+#     # Run Calibre system integration scripts
+#     - $FLATPAK_DEST/lib/calibre/calibre_postinstall --root=$FLATPAK_DEST
+#   cleanup:
+#     - /bin/calibre-uninstall
+#     - /bin/calibre_postinstall
+#     - /share/applications/mimeinfo.cache
+#   sources:
+#     - type: file
+#       only-arches:
+#         - x86_64
+#       url: https://download.calibre-ebook.com/5.21.0/calibre-5.21.0-x86_64.txz
+#       x-checker-data:
+#         type: html
+#         url: https://calibre-ebook.com/download_linux
+#         version-pattern: The latest release of calibre is ((?:\d+\.)?(?:\d+\.)?\d+)
+#         url-template: https://download.calibre-ebook.com/$version/calibre-$version-x86_64.txz
+#       sha256: 71e65fa42daf86a3afd45321f20e55811ee2438abb860d763c79d6bdc617c756
+
+  - name: polish
+    buildsystem: simple
+    build-commands:
       # post-install for ebook-edit
       - mv $FLATPAK_DEST/share/applications/{calibre-ebook-edit,$FLATPAK_ID.ebook-edit}.desktop
       - for p in 16 32 48 64 128 256; do mv $FLATPAK_DEST/share/icons/hicolor/${p}x${p}/apps/{calibre-ebook-edit,$FLATPAK_ID.ebook-edit}.png;
@@ -80,49 +1110,3 @@ modules:
 
       # post-install for MIME types
       - mv $FLATPAK_DEST/share/mime/packages/{calibre-mimetypes,$FLATPAK_ID}.xml
-    cleanup:
-      - /bin/calibre-uninstall
-      - /share/applications/mimeinfo.cache
-    sources:
-      - type: file
-        only-arches:
-          - x86_64
-        url: https://download.calibre-ebook.com/5.44.0/calibre-5.44.0-x86_64.txz
-        x-checker-data:
-          type: html
-          url: https://calibre-ebook.com/download_linux
-          version-pattern: The latest release of calibre is ((?:\d+\.)?(?:\d+\.)?\d+)
-          url-template: https://download.calibre-ebook.com/$version/calibre-$version-x86_64.txz
-        sha256: 80f1696a1de046b7b4213304d1a1eeb3faae97a3989418d679628de4d078d5e7
-    modules:
-      # Required by post-installation script only
-      - name: xdg-utils
-        buildsystem: autotools
-        cleanup: ['*']
-        sources:
-          - type: archive
-            url: https://portland.freedesktop.org/download/xdg-utils-1.1.3.tar.gz
-            sha1: 98294cf332c341b85e481d98e9ea59357fe1efc7
-            sha256: d798b08af8a8e2063ddde6c9fa3398ca81484f27dec642c5627ffcaa0d4051d9
-        modules:
-          # Required by xmlto for converting HTML files to plain text
-          #
-          # Technically, we don't need this but patching the xmlto dependency
-          # out of xdg-utils just isn't worth it.
-          - name: links
-            buildsystem: autotools
-            post-install:
-              - ln -s links "${FLATPAK_DEST}/bin/elinks"
-            cleanup: ['*']
-            sources:
-              - type: archive
-                url: http://links.twibright.com/download/links-2.21.tar.bz2
-                sha256: 285eed8591c7781ec26213df82786665aaa1b9286782e8a7a1a7e2a6e1630d63
-          # Required by xdg-util's build system
-          - name: xmlto
-            buildsystem: autotools
-            cleanup: ['*']
-            sources:
-              - type: archive
-                url: https://releases.pagure.org/xmlto/xmlto-0.0.28.tar.bz2
-                sha256: 1130df3a7957eb9f6f0d29e4aa1c75732a7dfb6d639be013859b5c7ec5421276

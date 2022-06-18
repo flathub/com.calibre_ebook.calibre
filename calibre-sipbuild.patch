@@ -1,0 +1,12 @@
+diff --git a/setup/build.py b/setup/build.py
+index aa1013c..bf8927b 100644
+--- a/setup/build.py
++++ b/setup/build.py
+@@ -538,6 +538,7 @@ project-factory = "pyqtbuild:PyQtProject"
+ [tool.sip.project]
+ sip-files-dir = "."
+ {abi_version}
++sip-include-dirs = [ '/app/lib/python/site-packages/PyQt5/bindings']
+ 
+ [tool.sip.bindings.pictureflow]
+ headers = {ext.headers}
