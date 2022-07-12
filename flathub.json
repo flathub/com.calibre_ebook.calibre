@@ -1,5 +1,5 @@
 {
-    "only-arches": ["x86_64"],
+    "only-arches": ["x86_64", "aarch64"],
     "skip-appstream-check": true,
     "automerge-flathubbot-prs": true
 }
