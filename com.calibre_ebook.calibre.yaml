@@ -6,7 +6,6 @@ command: calibre
 separate-locales: false
 finish-args:
   - --device=all
-  - --device=dri
   - --filesystem=host
   - --filesystem=xdg-config/kdeglobals:ro
   - --share=ipc
