@@ -1,6 +1,6 @@
 app-id: com.calibre_ebook.calibre
 runtime: org.freedesktop.Platform
-runtime-version: '21.08'
+runtime-version: '22.08'
 sdk: org.freedesktop.Sdk
 command: calibre
 separate-locales: false
@@ -86,21 +86,21 @@ modules:
       - type: file
         only-arches:
           - x86_64
-        url: https://github.com/kovidgoyal/calibre/releases/download/v6.7.1/calibre-6.7.1-x86_64.txz
+        url: https://github.com/kovidgoyal/calibre/releases/download/v6.8.0/calibre-6.8.0-x86_64.txz
         x-checker-data:
           type: anitya
           project-id: 6141
           url-template: https://github.com/kovidgoyal/calibre/releases/download/v$version/calibre-$version-x86_64.txz
-        sha256: e09c0adbe5a9472b9c05bda88bbd38a52c4a90b9673812b25d1f97a440d8bcc8
+        sha256: bd38d598aebee6ef335cee7ce6f31a3d7cb29cfa4dde7f9a1d324ab8d3168111
       - type: file
         only-arches:
           - aarch64
-        url: https://github.com/kovidgoyal/calibre/releases/download/v6.7.1/calibre-6.7.1-arm64.txz
+        url: https://github.com/kovidgoyal/calibre/releases/download/v6.8.0/calibre-6.8.0-arm64.txz
         x-checker-data:
           type: anitya
           project-id: 6141
           url-template: https://github.com/kovidgoyal/calibre/releases/download/v$version/calibre-$version-arm64.txz
-        sha256: 84736e6edd60702f02ae5e7607504253e50b4048a734617e577f872968295ba3
+        sha256: a24c41bda968f5c8ae480bd25dc9914695fcc894b06d98b04aaabc7819d93da2
     modules:
       # Required by post-installation script only
       - name: xdg-utils
