@@ -20,6 +20,7 @@ finish-args:
   - --own-name=org.kde.*
   - --env=KDE_FORK_SLAVES=1
   - --env=SSL_CERT_DIR=/etc/ssl/certs
+  - --env=OPENSSL_CONF=/dev/null
 modules:
   - name: calibre
     buildsystem: simple
