@@ -17,7 +17,6 @@ finish-args:
   - --system-talk-name=org.freedesktop.UDisks2
   - --talk-name=com.canonical.AppMenu.Registrar
   - --talk-name=org.kde.StatusNotifierWatcher
-  - --own-name=org.kde.*
   - --env=KDE_FORK_SLAVES=1
   - --env=SSL_CERT_DIR=/etc/ssl/certs
   - --env=OPENSSL_CONF=/dev/null
