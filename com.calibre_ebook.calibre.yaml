@@ -69,7 +69,7 @@ modules:
       - desktop-file-edit --set-key Icon --set-value $FLATPAK_ID $FLATPAK_DEST/share/applications/$FLATPAK_ID.desktop
 
       # post-install for metainfo
-      - mv $FLATPAK_DEST/share/metainfo/{calibre-gui,$FLATPAK_ID}.metainfo.xml
+      - cp $FLATPAK_DEST/share/metainfo/{calibre-gui,$FLATPAK_ID}.metainfo.xml
       - appstream-util modify $FLATPAK_DEST/share/metainfo/$FLATPAK_ID.metainfo.xml
         id $FLATPAK_ID
       - appstream-util modify $FLATPAK_DEST/share/metainfo/$FLATPAK_ID.metainfo.xml
