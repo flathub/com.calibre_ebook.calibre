@@ -84,21 +84,21 @@ modules:
       - type: file
         only-arches:
           - x86_64
-        url: https://github.com/kovidgoyal/calibre/releases/download/v6.29.0/calibre-6.29.0-x86_64.txz
+        url: https://github.com/kovidgoyal/calibre/releases/download/v7.0.0/calibre-7.0.0-x86_64.txz
         x-checker-data:
           type: anitya
           project-id: 6141
           url-template: https://github.com/kovidgoyal/calibre/releases/download/v$version/calibre-$version-x86_64.txz
-        sha256: 08b638bb1e3b45b2350abf0c300f927a63ed9ec2ec8de0cdd481b0c4190435d3
+        sha256: 939aeb0bbf37446f72da26ab8e2b329921be50d9a2bb1c260e8213fc815966e6
       - type: file
         only-arches:
           - aarch64
-        url: https://github.com/kovidgoyal/calibre/releases/download/v6.29.0/calibre-6.29.0-arm64.txz
+        url: https://github.com/kovidgoyal/calibre/releases/download/v7.0.0/calibre-7.0.0-arm64.txz
         x-checker-data:
           type: anitya
           project-id: 6141
           url-template: https://github.com/kovidgoyal/calibre/releases/download/v$version/calibre-$version-arm64.txz
-        sha256: 4cc4c836bdd7e62e8cb7d09611ae082bfaaa63901916bdfada93871026f2c1b3
+        sha256: 55c74975c6ac58c16756b24467d8f1db019af8d4d1d3e352747f9fcc2fe769d9
     modules:
       # Required by post-installation script only
       - name: xdg-utils
