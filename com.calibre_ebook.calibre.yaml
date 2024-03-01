@@ -74,8 +74,6 @@ modules:
         id $FLATPAK_ID
       - appstream-util modify $FLATPAK_DEST/share/metainfo/$FLATPAK_ID.metainfo.xml
         launchable $FLATPAK_ID.desktop
-      - appstream-util modify $FLATPAK_DEST/share/metainfo/$FLATPAK_ID.metainfo.xml
-        developer_name "Kovid Goyal"
 
       # post-install for MIME types
       - mv $FLATPAK_DEST/share/mime/packages/{calibre-mimetypes,$FLATPAK_ID}.xml
