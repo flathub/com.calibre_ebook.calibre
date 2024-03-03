@@ -1,6 +1,6 @@
 app-id: com.calibre_ebook.calibre
 runtime: org.freedesktop.Platform
-runtime-version: '22.08'
+runtime-version: '23.08'
 sdk: org.freedesktop.Sdk
 command: calibre
 finish-args:
@@ -16,7 +16,6 @@ finish-args:
   - --system-talk-name=org.freedesktop.UDisks2
   - --talk-name=com.canonical.AppMenu.Registrar
   - --talk-name=org.kde.StatusNotifierWatcher
-  - --own-name=org.kde.*
   - --env=KDE_FORK_SLAVES=1
   - --env=SSL_CERT_DIR=/etc/ssl/certs
   - --env=OPENSSL_CONF=/dev/null
@@ -69,13 +68,11 @@ modules:
       - desktop-file-edit --set-key Icon --set-value $FLATPAK_ID $FLATPAK_DEST/share/applications/$FLATPAK_ID.desktop
 
       # post-install for metainfo
-      - mv $FLATPAK_DEST/share/metainfo/{calibre-gui,$FLATPAK_ID}.metainfo.xml
+      - cp $FLATPAK_DEST/share/metainfo/{calibre-gui,$FLATPAK_ID}.metainfo.xml
       - appstream-util modify $FLATPAK_DEST/share/metainfo/$FLATPAK_ID.metainfo.xml
         id $FLATPAK_ID
       - appstream-util modify $FLATPAK_DEST/share/metainfo/$FLATPAK_ID.metainfo.xml
         launchable $FLATPAK_ID.desktop
-      - appstream-util add-provide $FLATPAK_DEST/share/metainfo/${FLATPAK_ID}.metainfo.xml
-        id calibre-gui.desktop
 
       # post-install for MIME types
       - mv $FLATPAK_DEST/share/mime/packages/{calibre-mimetypes,$FLATPAK_ID}.xml
@@ -96,21 +93,21 @@ modules:
       - type: file
         only-arches:
           - x86_64
-        url: https://github.com/kovidgoyal/calibre/releases/download/v6.11.0/calibre-6.11.0-x86_64.txz
+        url: https://github.com/kovidgoyal/calibre/releases/download/v7.6.0/calibre-7.6.0-x86_64.txz
         x-checker-data:
           type: anitya
           project-id: 6141
           url-template: https://github.com/kovidgoyal/calibre/releases/download/v$version/calibre-$version-x86_64.txz
-        sha256: 1765ddf834ae47580822d0ea3de9c284c0949f04b1045f9eae5e598019488b4a
+        sha256: b5b617c01017526848276fbc2e031406a42ad922b242e6d35eb1e63f2eb28ae8
       - type: file
         only-arches:
           - aarch64
-        url: https://github.com/kovidgoyal/calibre/releases/download/v6.11.0/calibre-6.11.0-arm64.txz
+        url: https://github.com/kovidgoyal/calibre/releases/download/v7.6.0/calibre-7.6.0-arm64.txz
         x-checker-data:
           type: anitya
           project-id: 6141
           url-template: https://github.com/kovidgoyal/calibre/releases/download/v$version/calibre-$version-arm64.txz
-        sha256: 2408e5074e3a70984f617fe5b23e00b69892100a9a56fa67fe660b2d1c3486f3
+        sha256: 662b603d046165008a6f9dd535ce73eb262ba103e896a0d5cdf67aff36cf264d
     modules:
       # Required by post-installation script only
       - name: xdg-utils
