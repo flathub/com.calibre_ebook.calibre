@@ -3,7 +3,6 @@ runtime: org.freedesktop.Platform
 runtime-version: '23.08'
 sdk: org.freedesktop.Sdk
 command: calibre
-separate-locales: false
 finish-args:
   - --device=all
   - --filesystem=host
@@ -77,6 +76,16 @@ modules:
 
       # post-install for MIME types
       - mv $FLATPAK_DEST/share/mime/packages/{calibre-mimetypes,$FLATPAK_ID}.xml
+
+      # To allow separate locales
+      # https://searchfox.org/mozilla-central/rev/8a4f55bc09ffc5c25dcb4586c51ae4a9fee77b4c/taskcluster/docker/firefox-flatpak/runme.sh#131-133
+      - |
+        for lang in ${FLATPAK_DEST}/lib/calibre/translations/qtwebengine_locales/*.pak
+        do
+          locale="$(basename -s .pak $lang)"
+          install -Dm644 -t "${FLATPAK_DEST}/share/runtime/locale/${locale%%-*}/qtwebengine" "$lang"
+          ln -sf "${FLATPAK_DEST}/share/runtime/locale/${locale%%-*}/qtwebengine/$(basename $lang)" "${FLATPAK_DEST}/lib/calibre/translations/qtwebengine_locales/$(basename $lang)"
+        done
     cleanup:
       - /bin/calibre-uninstall
       - /share/applications/mimeinfo.cache
