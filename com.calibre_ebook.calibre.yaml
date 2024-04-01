@@ -4,6 +4,8 @@ runtime-version: '23.08'
 sdk: org.freedesktop.Sdk
 command: calibre
 separate-locales: false
+rename-desktop-file: calibre-gui.desktop
+rename-appdata-file: calibre-gui.metainfo.xml
 finish-args:
   - --device=all
   - --filesystem=host
@@ -63,17 +65,7 @@ modules:
       - desktop-file-edit --set-key Icon --set-value $FLATPAK_ID.ebook-viewer $FLATPAK_DEST/share/applications/$FLATPAK_ID.lrfviewer.desktop
 
       # post-install for calibre
-      - mv $FLATPAK_DEST/share/applications/{calibre-gui,$FLATPAK_ID}.desktop
-      - for p in 16 32 48 64 128 256; do mv $FLATPAK_DEST/share/icons/hicolor/${p}x${p}/apps/{calibre-gui,$FLATPAK_ID}.png;
-        done
-      - desktop-file-edit --set-key Icon --set-value $FLATPAK_ID $FLATPAK_DEST/share/applications/$FLATPAK_ID.desktop
-
-      # post-install for metainfo
-      - cp $FLATPAK_DEST/share/metainfo/{calibre-gui,$FLATPAK_ID}.metainfo.xml
-      - appstream-util modify $FLATPAK_DEST/share/metainfo/$FLATPAK_ID.metainfo.xml
-        id $FLATPAK_ID
-      - appstream-util modify $FLATPAK_DEST/share/metainfo/$FLATPAK_ID.metainfo.xml
-        launchable $FLATPAK_ID.desktop
+      - for p in 16 32 48 64 128 256; do mv $FLATPAK_DEST/share/icons/hicolor/${p}x${p}/apps/{calibre-gui,$FLATPAK_ID}.png; done
 
       # post-install for MIME types
       - mv $FLATPAK_DEST/share/mime/packages/{calibre-mimetypes,$FLATPAK_ID}.xml
