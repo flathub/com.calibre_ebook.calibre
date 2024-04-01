@@ -6,7 +6,7 @@ command: calibre
 separate-locales: false
 rename-desktop-file: calibre-gui.desktop
 rename-appdata-file: calibre-gui.metainfo.xml
-rename-mime-file: calibre-mimetypes
+rename-mime-file: calibre-mimetypes.xml
 rename-icon: calibre-gui
 finish-args:
   - --device=all
