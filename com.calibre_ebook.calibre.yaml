@@ -6,6 +6,8 @@ command: calibre
 separate-locales: false
 rename-desktop-file: calibre-gui.desktop
 rename-appdata-file: calibre-gui.metainfo.xml
+rename-mime-file: calibre-mimetypes
+rename-icon: calibre-gui
 finish-args:
   - --device=all
   - --filesystem=host
@@ -63,12 +65,6 @@ modules:
       # NOTE: Both lrfviewer and ebook-viewer share the same icon
       - mv $FLATPAK_DEST/share/applications/{calibre-lrfviewer,$FLATPAK_ID.lrfviewer}.desktop
       - desktop-file-edit --set-key Icon --set-value $FLATPAK_ID.ebook-viewer $FLATPAK_DEST/share/applications/$FLATPAK_ID.lrfviewer.desktop
-
-      # post-install for calibre
-      - for p in 16 32 48 64 128 256; do mv $FLATPAK_DEST/share/icons/hicolor/${p}x${p}/apps/{calibre-gui,$FLATPAK_ID}.png; done
-
-      # post-install for MIME types
-      - mv $FLATPAK_DEST/share/mime/packages/{calibre-mimetypes,$FLATPAK_ID}.xml
     cleanup:
       - /bin/calibre-uninstall
       - /share/applications/mimeinfo.cache
