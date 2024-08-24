@@ -118,3 +118,15 @@ modules:
               - type: archive
                 url: https://releases.pagure.org/xmlto/xmlto-0.0.28.tar.bz2
                 sha256: 1130df3a7957eb9f6f0d29e4aa1c75732a7dfb6d639be013859b5c7ec5421276
+          # temporary hotfix for https://github.com/flathub/com.calibre_ebook.calibre/issues/225
+          - name: libdeflate
+            buildsystem: cmake-ninja
+            config-opts:
+              - -DCMAKE_BUILD_TYPE=Release
+              - -DLIBDEFLATE_BUILD_STATIC_LIB=OFF
+              - -DLIBDEFLATE_BUILD_TESTS=ON
+            sources:
+              - type: git
+                url: https://github.com/ebiggers/libdeflate
+                commit: 9be1c54e6086cd1f9e1e7dece96eb6d1355c93f7
+                tag: v1.21
