@@ -110,6 +110,10 @@ modules:
               - type: archive
                 url: http://links.twibright.com/download/links-2.30.tar.bz2
                 sha256: c4631c6b5a11527cdc3cb7872fc23b7f2b25c2b021d596be410dadb40315f166
+                x-checker-data:
+                  type: anitya
+                  project-id: 1822
+                  url-template: http://links.twibright.com/download/links-$version.tar.bz2
           # Required by xdg-util's build system
           - name: xmlto
             buildsystem: autotools
@@ -118,6 +122,10 @@ modules:
               - type: archive
                 url: https://releases.pagure.org/xmlto/xmlto-0.0.29.tar.bz2
                 sha256: 6000d8e8f0f9040426c4f85d7ad86789bc88d4aeaef585c4d4110adb0b214f21
+                x-checker-data:
+                  type: anitya
+                  project-id: 13307
+                  url-template: https://releases.pagure.org/xmlto/xmlto-$version.tar.bz2
               - type: script
                 commands:
                   - autoreconf -fiv
