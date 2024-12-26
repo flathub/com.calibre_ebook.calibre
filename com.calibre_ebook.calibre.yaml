@@ -72,12 +72,12 @@ modules:
       - type: file
         only-arches:
           - x86_64
-        url: https://github.com/kovidgoyal/calibre/releases/download/v7.22.0/calibre-7.22.0-x86_64.txz
+        url: https://github.com/kovidgoyal/calibre/releases/download/v7.23.0/calibre-7.23.0-x86_64.txz
         x-checker-data:
           type: anitya
           project-id: 6141
           url-template: https://github.com/kovidgoyal/calibre/releases/download/v$version/calibre-$version-x86_64.txz
-        sha256: 6f2fd0f1e03bf80f6cf09e3a7ebbdfa0bc5ade79b0cf53b46cdb4ddf21ee2053
+        sha256: c7766d554b9ab253d30917232ac9c059019bbb5b0ec28900e46ea3b79c9b5d96
       - type: file
         only-arches:
           - aarch64
