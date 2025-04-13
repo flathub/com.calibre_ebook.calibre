@@ -15,6 +15,7 @@ finish-args:
   - --share=ipc
   - --share=network
   - --socket=fallback-x11
+  - --socket=pulseaudio
   - --socket=wayland
   - --filesystem=xdg-run/speech-dispatcher:ro
   - --filesystem=xdg-data/Trash
