@@ -53,19 +53,19 @@ modules:
       - mv $FLATPAK_DEST/share/applications/{calibre-ebook-edit,$FLATPAK_ID.ebook-edit}.desktop
       - for p in 16 32 48 64 128 256; do mv $FLATPAK_DEST/share/icons/hicolor/${p}x${p}/apps/{calibre-ebook-edit,$FLATPAK_ID.ebook-edit}.png;
         done
-      - desktop-file-edit --set-key Icon --set-value $FLATPAK_ID.ebook-edit $FLATPAK_DEST/share/applications/$FLATPAK_ID.ebook-edit.desktop
+      - desktop-file-edit --set-icon=$FLATPAK_ID.ebook-edit $FLATPAK_DEST/share/applications/$FLATPAK_ID.ebook-edit.desktop
 
       # post-install for ebook-viewer
       # NOTE: Upstream desktop and icon basenames do not match
       - mv $FLATPAK_DEST/share/applications/{calibre-ebook-viewer,$FLATPAK_ID.ebook-viewer}.desktop
       - for p in 16 32 48 64 128 256; do mv $FLATPAK_DEST/share/icons/hicolor/${p}x${p}/apps/{calibre-viewer,$FLATPAK_ID.ebook-viewer}.png;
         done
-      - desktop-file-edit --set-key Icon --set-value $FLATPAK_ID.ebook-viewer $FLATPAK_DEST/share/applications/$FLATPAK_ID.ebook-viewer.desktop
+      - desktop-file-edit --set-icon=$FLATPAK_ID.ebook-viewer $FLATPAK_DEST/share/applications/$FLATPAK_ID.ebook-viewer.desktop
 
       # post-install for lrfviewer
       # NOTE: Both lrfviewer and ebook-viewer share the same icon
       - mv $FLATPAK_DEST/share/applications/{calibre-lrfviewer,$FLATPAK_ID.lrfviewer}.desktop
-      - desktop-file-edit --set-key Icon --set-value $FLATPAK_ID.ebook-viewer $FLATPAK_DEST/share/applications/$FLATPAK_ID.lrfviewer.desktop
+      - desktop-file-edit --set-icon=$FLATPAK_ID.ebook-viewer $FLATPAK_DEST/share/applications/$FLATPAK_ID.lrfviewer.desktop
     cleanup:
       - /bin/calibre-uninstall
       - /share/applications/mimeinfo.cache
