@@ -115,6 +115,8 @@ modules:
                   type: anitya
                   project-id: 1822
                   url-template: http://links.twibright.com/download/links-$version.tar.bz2
+              - type: patch
+                path: links-gcc16.patch
           # Required by xdg-util's build system
           - name: xmlto
             buildsystem: autotools
