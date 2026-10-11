@@ -73,7 +73,7 @@ modules:
       - type: file
         only-arches:
           - x86_64
-        url: https://github.com/kovidgoyal/calibre/releases/download/v9.16.00/calibre-9.16.00-x86_64.txz
+        url: https://github.com/kovidgoyal/calibre/releases/download/v9.16.0/calibre-9.16.0-x86_64.txz
         x-checker-data:
           type: anitya
           project-id: 6141
@@ -82,7 +82,7 @@ modules:
       - type: file
         only-arches:
           - aarch64
-        url: https://github.com/kovidgoyal/calibre/releases/download/v9.16.00/calibre-9.16.00-arm64.txz
+        url: https://github.com/kovidgoyal/calibre/releases/download/v9.16.0/calibre-9.16.0-arm64.txz
         x-checker-data:
           type: anitya
           project-id: 6141
